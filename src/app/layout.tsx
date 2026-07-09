@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans_Hebrew } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { AppSidebar } from "@/components/layout/app-sidebar";
+import { AuthGuard } from "@/components/layout/auth-guard";
+import { ClientLayout } from "@/components/layout/client-layout";
 import { getDictionary } from "@/lib/i18n/get-locale";
 
 const geistSans = Geist({
@@ -41,10 +42,11 @@ export default async function RootLayout({
     >
       <body className="min-h-full font-[family-name:var(--font-noto-hebrew)]">
         <TooltipProvider>
-          <div className="flex h-screen">
-            <AppSidebar dict={dict} locale={locale} />
-            <div className="flex-1 overflow-y-auto">{children}</div>
-          </div>
+          <AuthGuard>
+            <ClientLayout dict={dict} locale={locale}>
+              {children}
+            </ClientLayout>
+          </AuthGuard>
         </TooltipProvider>
       </body>
     </html>
