@@ -8,10 +8,10 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
 export function PatientSubnav({ patientId, dict }: { patientId: string; dict: Dictionary }) {
   const pathname = usePathname();
   const tabs = [
-    { href: `/patients/${patientId}`, label: dict.patientSubnav.overview },
-    { href: `/patients/${patientId}/sessions`, label: dict.patientSubnav.sessions },
-    { href: `/patients/${patientId}/progress`, label: dict.patientSubnav.progress },
-    { href: `/patients/${patientId}/missions`, label: dict.patientSubnav.missions },
+    { href: `/therapist/patients/${patientId}`, label: dict.patientSubnav.overview },
+    { href: `/therapist/patients/${patientId}/sessions`, label: dict.patientSubnav.sessions },
+    { href: `/therapist/patients/${patientId}/progress`, label: dict.patientSubnav.progress },
+    { href: `/therapist/patients/${patientId}/missions`, label: dict.patientSubnav.missions },
   ];
 
   return (

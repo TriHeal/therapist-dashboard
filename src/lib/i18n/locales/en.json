@@ -167,5 +167,26 @@
   "schedule.noUpcoming": "No upcoming sessions.",
 
   "locale.hebrew": "עברית",
-  "locale.english": "English"
+  "locale.english": "English",
+
+  "parentNav.appName": "Kesher Marpe",
+  "parentNav.home": "Home",
+  "parentNav.missions": "Joint Missions",
+  "parentNav.reflections": "Reflection Log",
+
+  "parentHome.title": "Home",
+  "parentHome.description": "An overview of your shared journey",
+  "parentHome.childCard": "Your child",
+  "parentHome.activeMissionsTitle": "Active joint missions",
+  "parentHome.noActiveMissions": "No active missions right now.",
+  "parentHome.recentReflectionsTitle": "Recent reflections",
+  "parentHome.noReflections": "No reflections logged yet.",
+
+  "parentMissionsPage.title": "Joint Missions",
+  "parentMissionsPage.description": "Shared practice missions with your child",
+  "parentMissionsPage.noMissions": "No missions assigned yet.",
+
+  "parentReflectionsPage.title": "Reflection Log",
+  "parentReflectionsPage.description": "What happened and how it went, in your own words",
+  "parentReflectionsPage.noReflections": "No reflections logged yet."
 }

@@ -83,7 +83,7 @@ export function PatientRosterSearch({
             {filtered.map((p) => (
               <TableRow key={p.id}>
                 <TableCell>
-                  <Link href={`/patients/${p.id}`} className="font-medium hover:underline">
+                  <Link href={`/therapist/patients/${p.id}`} className="font-medium hover:underline">
                     {p.displayName}
                   </Link>
                 </TableCell>
