@@ -34,7 +34,7 @@ export default async function LiveSessionsPage() {
               <Card key={patient.id}>
                 <CardContent className="flex items-center justify-between py-4">
                   <span className="font-medium">{patient.displayName}</span>
-                  <Button render={<Link href={`/live/${patient.id}`} />} size="sm">
+                  <Button render={<Link href={`/therapist/live/${patient.id}`} />} size="sm">
                     {dict.livePage.startSessionWith} {patient.displayName}
                   </Button>
                 </CardContent>

@@ -167,5 +167,26 @@
   "schedule.noUpcoming": "אין מפגשים מתוכננים.",
 
   "locale.hebrew": "עברית",
-  "locale.english": "English"
+  "locale.english": "English",
+
+  "parentNav.appName": "קשר מרפא",
+  "parentNav.home": "בית",
+  "parentNav.missions": "משימות משותפות",
+  "parentNav.reflections": "יומן רפלקציה",
+
+  "parentHome.title": "בית",
+  "parentHome.description": "סקירה של המסע המשותף שלכם",
+  "parentHome.childCard": "הילד/ה שלך",
+  "parentHome.activeMissionsTitle": "משימות משותפות פעילות",
+  "parentHome.noActiveMissions": "אין משימות פעילות כרגע.",
+  "parentHome.recentReflectionsTitle": "רפלקציות אחרונות",
+  "parentHome.noReflections": "לא נרשמו רפלקציות עדיין.",
+
+  "parentMissionsPage.title": "משימות משותפות",
+  "parentMissionsPage.description": "משימות תרגול משותפות עם הילד/ה שלך",
+  "parentMissionsPage.noMissions": "לא הוקצו משימות עדיין.",
+
+  "parentReflectionsPage.title": "יומן רפלקציה",
+  "parentReflectionsPage.description": "מה קרה ואיך זה הלך, במילים שלך",
+  "parentReflectionsPage.noReflections": "לא נרשמו רפלקציות עדיין."
 }

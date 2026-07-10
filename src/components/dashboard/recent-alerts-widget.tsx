@@ -20,7 +20,7 @@ export async function RecentAlertsWidget({ alerts }: { alerts: FlaggedAlert[] })
           alerts.slice(0, 5).map((a) => (
             <Link
               key={a.id}
-              href={`/patients/${a.patientId}/sessions/${a.sessionId}`}
+              href={`/therapist/patients/${a.patientId}/sessions/${a.sessionId}`}
               className="flex items-center justify-between rounded-md border p-2 hover:bg-accent/50"
             >
               <span className="text-sm">

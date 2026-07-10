@@ -132,6 +132,18 @@ export type Dictionary = {
   } & { status: Record<MissionStatus, string> } & { type: Record<MissionType, string> };
   schedule: { title: string; description: string; noUpcoming: string };
   locale: { hebrew: string; english: string };
+  parentNav: { appName: string; home: string; missions: string; reflections: string };
+  parentHome: {
+    title: string;
+    description: string;
+    childCard: string;
+    activeMissionsTitle: string;
+    noActiveMissions: string;
+    recentReflectionsTitle: string;
+    noReflections: string;
+  };
+  parentMissionsPage: { title: string; description: string; noMissions: string };
+  parentReflectionsPage: { title: string; description: string; noReflections: string };
 };
 
 function buildDictionary(flat: Record<string, string>): Dictionary {
