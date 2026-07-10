@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { signIn } from "@/lib/firebase/auth";
+import { signIn, auth } from "@/lib/firebase/auth";
+import { loginWithToken } from "@/lib/actions/auth.actions";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
@@ -47,6 +48,12 @@ export default function LoginPage() {
 
       const { customToken } = await res.json();
       await signIn(customToken);
+      
+      const idToken = await auth.currentUser?.getIdToken(true);
+      if (idToken) {
+        await loginWithToken(idToken);
+      }
+      
       router.push("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "שגיאה בהתחברות");
