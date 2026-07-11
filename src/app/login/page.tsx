@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -10,29 +10,21 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { signIn, auth } from "@/lib/firebase/auth";
 import { loginWithToken } from "@/lib/actions/auth.actions";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
-
-/**
- * Login page — therapist enters T.Z. (ID number) + password.
- *
- * Flow:
- * 1. POST { tz, password } → NestJS `/auth/login`
- * 2. Backend verifies credentials and returns a Firebase custom token
- * 3. Frontend calls `signInWithCustomToken` to establish the Firebase session
- * 4. Redirect to dashboard
- */
+const DEV_USERS = [
+  { label: "מטפל/ת", id: "123456789", password: "test1234!" },
+];
 
 export default function LoginPage() {
   const router = useRouter();
-  const [tz, setTz] = useState("");
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
     setError(null);
-    setLoading(true);
+    setIsSubmitting(true);
 
     try {
       const res = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -58,57 +50,89 @@ export default function LoginPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : "שגיאה בהתחברות");
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-sm">
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">קשר מרפא</CardTitle>
+        <CardHeader>
+          <CardTitle>קשר מרפא</CardTitle>
           <CardDescription>התחברות למערכת</CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="tz">תעודת זהות</Label>
+
+        <form onSubmit={handleSubmit}>
+          <CardContent className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="id">תעודת זהות</Label>
               <Input
-                id="tz"
-                type="text"
-                inputMode="numeric"
+                id="id"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
                 autoComplete="username"
                 required
-                value={tz}
-                onChange={(e) => setTz(e.target.value)}
-                disabled={loading}
               />
             </div>
 
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-2">
               <Label htmlFor="password">סיסמה</Label>
               <Input
                 id="password"
                 type="password"
-                autoComplete="current-password"
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
+                autoComplete="current-password"
+                required
               />
             </div>
 
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+            {error && <p className="text-sm text-destructive">{error}</p>}
+          </CardContent>
 
-            <Button type="submit" disabled={loading}>
-              {loading ? "מתחבר…" : "התחברות"}
+          <CardFooter>
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "מתחבר..." : "התחברות"}
             </Button>
-          </form>
-        </CardContent>
+            {process.env.NODE_ENV !== "production" && (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => router.push("/parent")}
+              >
+                מעבר למסך הורה (זמני, ללא התחברות)
+              </Button>
+            )}
+          </CardFooter>
+        </form>
+
+        {process.env.NODE_ENV !== "production" && (
+          <CardContent className="border-t pt-4">
+            <p className="text-xs font-medium text-muted-foreground mb-2">
+              משתמשי דמו — סביבת פיתוח בלבד
+            </p>
+
+            <div className="flex flex-col gap-1.5">
+              {DEV_USERS.map((user) => (
+                <button
+                  key={user.id}
+                  type="button"
+                  onClick={() => {
+                    setId(user.id);
+                    setPassword(user.password);
+                  }}
+                  className="flex items-center justify-between rounded-md border px-3 py-2 text-xs text-start hover:bg-muted/50 transition-colors"
+                >
+                  <span className="text-muted-foreground">{user.label}</span>
+                  <span className="font-mono" dir="ltr">
+                    {user.id} / {user.password}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        )}
       </Card>
     </div>
   );

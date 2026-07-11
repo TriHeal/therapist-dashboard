@@ -26,14 +26,14 @@ export default async function AlertsPage({
       <div className="p-6 space-y-4">
         <div className="flex gap-2">
           <Button
-            render={<Link href="/alerts" />}
+            render={<Link href="/therapist/alerts" />}
             size="sm"
             variant={!unreviewedOnly ? "default" : "outline"}
           >
             {dict.alertsPage.filterAll}
           </Button>
           <Button
-            render={<Link href="/alerts?filter=unreviewed" />}
+            render={<Link href="/therapist/alerts?filter=unreviewed" />}
             size="sm"
             variant={unreviewedOnly ? "default" : "outline"}
           >
@@ -49,7 +49,7 @@ export default async function AlertsPage({
               <Card key={a.id}>
                 <CardContent className="flex items-center justify-between py-4">
                   <Link
-                    href={`/patients/${a.patientId}/sessions/${a.sessionId}`}
+                    href={`/therapist/patients/${a.patientId}/sessions/${a.sessionId}`}
                     className="flex-1 hover:underline"
                   >
                     <p className="text-sm font-medium">{a.patientName}</p>
