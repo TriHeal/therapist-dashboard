@@ -86,6 +86,10 @@
   "progressPage.syncImprovementTitle": "שיפור סנכרון לאורך זמן",
   "progressPage.notEnoughData": "אין עדיין מספיק נתוני מפגשים.",
   "progressPage.comparisonTitle": "תרגול שגרתי לעומת אירוע הצפה: זמן עד לסנכרון",
+  "progressPage.auditTrendTitle": "יומן בית — מגמת ציון סנכרון",
+  "progressPage.auditScoreLabel": "ציון סנכרון",
+  "progressPage.auditListTitle": "רשומות יומן בית אחרונות",
+  "progressPage.noAudits": "אין עדיין רשומות יומן בית מההורה.",
 
   "home.title": "לוח בקרה",
   "home.description": "סקירה כללית של המטופלים והפעילות האחרונה",
@@ -173,6 +177,7 @@
   "parentNav.home": "בית",
   "parentNav.missions": "משימות משותפות",
   "parentNav.reflections": "יומן רפלקציה",
+  "parentNav.audit": "יומן בית",
 
   "parentHome.title": "בית",
   "parentHome.description": "סקירה של המסע המשותף שלכם",
@@ -188,5 +193,25 @@
 
   "parentReflectionsPage.title": "יומן רפלקציה",
   "parentReflectionsPage.description": "מה קרה ואיך זה הלך, במילים שלך",
-  "parentReflectionsPage.noReflections": "לא נרשמו רפלקציות עדיין."
+  "parentReflectionsPage.noReflections": "לא נרשמו רפלקציות עדיין.",
+
+  "parentAuditPage.title": "יומן בית (רשות)",
+  "parentAuditPage.description": "צ׳ק-אין קצר ולא מחייב אחרי מפגש משחק בבית — בלי לחץ.",
+  "parentAuditPage.noCompletedSession": "היומן ייפתח אחרי שהילד/ה משלים/ה מפגש משחק בבית.",
+  "parentAuditPage.triggerLabel": "מה עורר את הקושי? (סוג טריגר)",
+  "parentAuditPage.triggerTypes.loud-noise": "רעש חזק",
+  "parentAuditPage.triggerTypes.transition": "מעבר",
+  "parentAuditPage.triggerTypes.demand": "דרישה",
+  "parentAuditPage.triggerTypes.other": "אחר",
+  "parentAuditPage.scoreLabel": "ציון ויסות משותף / סנכרון",
+  "parentAuditPage.scoreLow": "מנותק",
+  "parentAuditPage.scoreHigh": "מחובר",
+  "parentAuditPage.noteLabel": "הערה קצרה",
+  "parentAuditPage.noteOptional": "רשות",
+  "parentAuditPage.submit": "שמירת רשומה",
+  "parentAuditPage.saving": "שומר…",
+  "parentAuditPage.saved": "נשמר ✓",
+  "parentAuditPage.requiredHint": "בחרו טריגר וקבעו ציון כדי לשמור.",
+  "parentAuditPage.recentTitle": "הרשומות האחרונות שלך",
+  "parentAuditPage.noEntries": "אין רשומות עדיין."
 }

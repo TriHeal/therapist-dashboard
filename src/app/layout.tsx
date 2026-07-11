@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans_Hebrew } from "next/font/google";
 import "./globals.css";
+import { DirectionProvider } from "@base-ui/react/direction-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { getDictionary } from "@/lib/i18n/get-locale";
 
@@ -39,7 +40,9 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${notoSansHebrew.variable} h-full antialiased`}
     >
       <body className="min-h-full font-[family-name:var(--font-noto-hebrew)]">
-        <TooltipProvider>{children}</TooltipProvider>
+        <DirectionProvider direction={dir}>
+          <TooltipProvider>{children}</TooltipProvider>
+        </DirectionProvider>
       </body>
     </html>
   );

@@ -13,6 +13,7 @@ export function ParentSidebar({ dict, locale }: { dict: Dictionary; locale: Loca
     { href: "/parent", label: dict.parentNav.home },
     { href: "/parent/missions", label: dict.parentNav.missions },
     { href: "/parent/reflections", label: dict.parentNav.reflections },
+    { href: "/parent/audit", label: dict.parentNav.audit },
   ];
 
   return (

@@ -8,3 +8,4 @@ export * from "./services/alerts.service";
 export * from "./services/live.service";
 export * from "./services/missions.service";
 export * from "./services/parent.service";
+export * from "./services/parent-audits.service";
