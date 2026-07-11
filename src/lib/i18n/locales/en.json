@@ -86,6 +86,10 @@
   "progressPage.syncImprovementTitle": "Sync Improvement Over Time",
   "progressPage.notEnoughData": "Not enough session data yet.",
   "progressPage.comparisonTitle": "Routine vs. Flooding: Time to Sync",
+  "progressPage.auditTrendTitle": "Home Journal — Sync Score Trend",
+  "progressPage.auditScoreLabel": "Sync score",
+  "progressPage.auditListTitle": "Recent Home Journal Entries",
+  "progressPage.noAudits": "No home journal entries from the parent yet.",
 
   "home.title": "Dashboard",
   "home.description": "Overview of your patients and recent activity",
@@ -173,6 +177,7 @@
   "parentNav.home": "Home",
   "parentNav.missions": "Joint Missions",
   "parentNav.reflections": "Reflection Log",
+  "parentNav.audit": "Home Journal",
 
   "parentHome.title": "Home",
   "parentHome.description": "An overview of your shared journey",
@@ -188,5 +193,25 @@
 
   "parentReflectionsPage.title": "Reflection Log",
   "parentReflectionsPage.description": "What happened and how it went, in your own words",
-  "parentReflectionsPage.noReflections": "No reflections logged yet."
+  "parentReflectionsPage.noReflections": "No reflections logged yet.",
+
+  "parentAuditPage.title": "Optional Home Journal",
+  "parentAuditPage.description": "A quick, optional check-in after a home game session — no pressure.",
+  "parentAuditPage.noCompletedSession": "The journal opens up after your child completes a home game session.",
+  "parentAuditPage.triggerLabel": "What set things off? (Trigger type)",
+  "parentAuditPage.triggerTypes.loud-noise": "Loud noise",
+  "parentAuditPage.triggerTypes.transition": "Transition",
+  "parentAuditPage.triggerTypes.demand": "Demand",
+  "parentAuditPage.triggerTypes.other": "Other",
+  "parentAuditPage.scoreLabel": "Co-regulation / sync score",
+  "parentAuditPage.scoreLow": "Disconnected",
+  "parentAuditPage.scoreHigh": "Connected",
+  "parentAuditPage.noteLabel": "Brief note",
+  "parentAuditPage.noteOptional": "optional",
+  "parentAuditPage.submit": "Save entry",
+  "parentAuditPage.saving": "Saving…",
+  "parentAuditPage.saved": "Saved ✓",
+  "parentAuditPage.requiredHint": "Pick a trigger and set the score to save.",
+  "parentAuditPage.recentTitle": "Your recent entries",
+  "parentAuditPage.noEntries": "No entries yet."
 }
