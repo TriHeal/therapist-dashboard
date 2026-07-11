@@ -5,10 +5,15 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { signIn, auth } from "@/lib/firebase/auth";
-import { loginWithToken } from "@/lib/actions/auth.actions";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { login } from "@/lib/auth/login";
 
 const DEV_USERS = [
   { label: "מטפל/ת", id: "123456789", password: "test1234!" },
@@ -27,25 +32,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tz, password }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => null);
-        throw new Error(data?.message ?? "שם משתמש או סיסמה שגויים");
-      }
-
-      const { customToken } = await res.json();
-      await signIn(customToken);
-      
-      const idToken = await auth.currentUser?.getIdToken(true);
-      if (idToken) {
-        await loginWithToken(idToken);
-      }
-      
+      await login(id, password);
       router.push("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "שגיאה בהתחברות");
