@@ -5,16 +5,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { login } from "@/lib/auth/login";
-import { Role } from "@/types/auth";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { signIn, auth } from "@/lib/firebase/auth";
+import { loginWithToken } from "@/lib/actions/auth.actions";
 
 const DEV_USERS = [
   { label: "מטפל/ת", id: "123456789", password: "test1234!" },
@@ -33,11 +27,28 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      const role = await login(id, password);
-      router.push(role === Role.Parent ? "/parent" : "/therapist");
-      router.refresh();
-    } catch {
-      setError("שם משתמש או סיסמה שגויים");
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tz, password }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.message ?? "שם משתמש או סיסמה שגויים");
+      }
+
+      const { customToken } = await res.json();
+      await signIn(customToken);
+      
+      const idToken = await auth.currentUser?.getIdToken(true);
+      if (idToken) {
+        await loginWithToken(idToken);
+      }
+      
+      router.push("/");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "שגיאה בהתחברות");
     } finally {
       setIsSubmitting(false);
     }
@@ -83,6 +94,16 @@ export default function LoginPage() {
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "מתחבר..." : "התחברות"}
             </Button>
+            {process.env.NODE_ENV !== "production" && (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => router.push("/parent")}
+              >
+                מעבר למסך הורה (זמני, ללא התחברות)
+              </Button>
+            )}
           </CardFooter>
         </form>
 
