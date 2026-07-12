@@ -9,7 +9,7 @@ export async function SessionSummaryCard({ session }: { session: Session }) {
   const dateLocale = locale === "he" ? "he-IL" : "en-US";
 
   return (
-    <Link href={`/patients/${session.patientId}/sessions/${session.id}`}>
+    <Link href={`/therapist/patients/${session.patientId}/sessions/${session.id}`}>
       <Card className="hover:bg-accent/50 transition-colors">
         <CardContent className="flex items-center justify-between py-4">
           <div className="flex items-center gap-3">

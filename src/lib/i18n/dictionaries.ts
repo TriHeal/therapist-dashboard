@@ -1,4 +1,4 @@
-import type { PatientStatus, SessionStatus, SessionType, TriggerSeverity, MissionType, MissionStatus } from "@/types";
+import type { PatientStatus, SessionStatus, SessionType, TriggerSeverity, MissionType, MissionStatus, TriggerType } from "@/types";
 import { unflatten } from "./unflatten";
 import he from "./locales/he.json";
 import en from "./locales/en.json";
@@ -53,6 +53,10 @@ export type Dictionary = {
     syncImprovementTitle: string;
     notEnoughData: string;
     comparisonTitle: string;
+    auditTrendTitle: string;
+    auditScoreLabel: string;
+    auditListTitle: string;
+    noAudits: string;
   };
   home: {
     title: string;
@@ -132,6 +136,36 @@ export type Dictionary = {
   } & { status: Record<MissionStatus, string> } & { type: Record<MissionType, string> };
   schedule: { title: string; description: string; noUpcoming: string };
   locale: { hebrew: string; english: string };
+  parentNav: { appName: string; home: string; missions: string; reflections: string; audit: string };
+  parentHome: {
+    title: string;
+    description: string;
+    childCard: string;
+    activeMissionsTitle: string;
+    noActiveMissions: string;
+    recentReflectionsTitle: string;
+    noReflections: string;
+  };
+  parentMissionsPage: { title: string; description: string; noMissions: string };
+  parentReflectionsPage: { title: string; description: string; noReflections: string };
+  parentAuditPage: {
+    title: string;
+    description: string;
+    noCompletedSession: string;
+    triggerLabel: string;
+    triggerTypes: Record<TriggerType, string>;
+    scoreLabel: string;
+    scoreLow: string;
+    scoreHigh: string;
+    noteLabel: string;
+    noteOptional: string;
+    submit: string;
+    saving: string;
+    saved: string;
+    requiredHint: string;
+    recentTitle: string;
+    noEntries: string;
+  };
 };
 
 function buildDictionary(flat: Record<string, string>): Dictionary {

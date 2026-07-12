@@ -6,25 +6,23 @@ import { cn } from "@/lib/utils";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import type { Dictionary, Locale } from "@/lib/i18n/dictionaries";
 
-export function AppSidebar({ dict, locale }: { dict: Dictionary; locale: Locale }) {
+export function ParentSidebar({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const pathname = usePathname();
 
   const navItems = [
-    { href: "/therapist", label: dict.nav.dashboard },
-    { href: "/therapist/patients", label: dict.nav.patients },
-    { href: "/therapist/schedule", label: dict.nav.schedule },
-    { href: "/therapist/live", label: dict.nav.live },
-    { href: "/therapist/alerts", label: dict.nav.alerts },
-    { href: "/therapist/settings", label: dict.nav.settings },
+    { href: "/parent", label: dict.parentNav.home },
+    { href: "/parent/missions", label: dict.parentNav.missions },
+    { href: "/parent/reflections", label: dict.parentNav.reflections },
+    { href: "/parent/audit", label: dict.parentNav.audit },
   ];
 
   return (
     <aside className="w-56 shrink-0 border-e bg-sidebar h-full flex flex-col">
-      <div className="px-4 py-5 text-lg font-semibold">{dict.nav.appName}</div>
+      <div className="px-4 py-5 text-lg font-semibold">{dict.parentNav.appName}</div>
       <nav className="flex flex-col gap-1 px-2">
         {navItems.map((item) => {
           const active =
-            item.href === "/therapist" ? pathname === "/therapist" : pathname.startsWith(item.href);
+            item.href === "/parent" ? pathname === "/parent" : pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}

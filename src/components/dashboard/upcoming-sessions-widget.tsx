@@ -26,7 +26,7 @@ export async function UpcomingSessionsWidget({
           sessions.map((s) => (
             <Link
               key={s.id}
-              href={`/patients/${s.patientId}`}
+              href={`/therapist/patients/${s.patientId}`}
               className="flex items-center justify-between rounded-md border p-2 hover:bg-accent/50"
             >
               <span className="text-sm font-medium">

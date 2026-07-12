@@ -22,7 +22,7 @@ export default async function SchedulePage() {
           <p className="text-sm text-muted-foreground">{dict.schedule.noUpcoming}</p>
         ) : (
           sessions.map((s) => (
-            <Link key={s.id} href={`/patients/${s.patientId}`}>
+            <Link key={s.id} href={`/therapist/patients/${s.patientId}`}>
               <Card className="hover:bg-accent/50 transition-colors">
                 <CardContent className="flex items-center justify-between py-4">
                   <div className="flex items-center gap-3">
