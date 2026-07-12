@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { apiFetch, USE_API } from "@/lib/api/client";
 import { missions, nextMissionId } from "@/lib/data/mock/missions.mock";
 import type { MissionType } from "@/types";
 
@@ -12,16 +13,23 @@ export async function assignMission(formData: FormData) {
 
   if (!patientId || !title) return;
 
-  missions.push({
-    id: nextMissionId(),
-    patientId,
-    title,
-    type,
-    status: "active",
-    targetCount: Math.max(1, targetCount),
-    completedCount: 0,
-    createdAt: new Date().toISOString(),
-  });
+  if (USE_API) {
+    await apiFetch(`/missions`, {
+      method: "POST",
+      body: { patientId, title, type, targetCount: Math.max(1, targetCount) },
+    });
+  } else {
+    missions.push({
+      id: nextMissionId(),
+      patientId,
+      title,
+      type,
+      status: "active",
+      targetCount: Math.max(1, targetCount),
+      completedCount: 0,
+      createdAt: new Date().toISOString(),
+    });
+  }
 
   revalidatePath(`/patients/${patientId}/missions`);
   revalidatePath(`/patients/${patientId}`);
@@ -31,13 +39,20 @@ export async function assignMission(formData: FormData) {
 export async function logMissionPractice(formData: FormData) {
   const missionId = String(formData.get("missionId") ?? "");
   const patientId = String(formData.get("patientId") ?? "");
-  const mission = missions.find((m) => m.id === missionId);
-  if (!mission) return;
+  
+  if (USE_API) {
+    await apiFetch(`/missions/${missionId}/log-practice`, {
+      method: "POST",
+    });
+  } else {
+    const mission = missions.find((m) => m.id === missionId);
+    if (!mission) return;
 
-  mission.completedCount = Math.min(mission.targetCount, mission.completedCount + 1);
-  if (mission.completedCount >= mission.targetCount) {
-    mission.status = "completed";
-    mission.completedAt = new Date().toISOString();
+    mission.completedCount = Math.min(mission.targetCount, mission.completedCount + 1);
+    if (mission.completedCount >= mission.targetCount) {
+      mission.status = "completed";
+      mission.completedAt = new Date().toISOString();
+    }
   }
 
   revalidatePath(`/patients/${patientId}/missions`);
