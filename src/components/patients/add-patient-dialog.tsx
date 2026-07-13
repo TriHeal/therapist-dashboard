@@ -33,11 +33,9 @@ export function AddPatientDialog({ dict }: { dict: Dictionary }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0" />
-          {dict.home.addPatient}
-        </Button>
+      <DialogTrigger render={<Button />}>
+        <Plus className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0" />
+        {dict.home.addPatient}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form action={handleSubmit}>
