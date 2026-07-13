@@ -9,7 +9,7 @@ export const USE_API = !!BASE_URL;
 
 export async function apiFetch<T>(
   path: string,
-  options: RequestInit & { body?: unknown } = {}
+  options: Omit<RequestInit, 'body'> & { body?: unknown } = {}
 ): Promise<T> {
   if (!BASE_URL) throw new Error("NEXT_PUBLIC_API_BASE_URL is not configured");
 
