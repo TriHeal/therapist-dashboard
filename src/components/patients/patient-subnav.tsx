@@ -11,7 +11,6 @@ export function PatientSubnav({ patientId, dict }: { patientId: string; dict: Di
     { href: `/therapist/patients/${patientId}`, label: dict.patientSubnav.overview },
     { href: `/therapist/patients/${patientId}/sessions`, label: dict.patientSubnav.sessions },
     { href: `/therapist/patients/${patientId}/progress`, label: dict.patientSubnav.progress },
-    { href: `/therapist/patients/${patientId}/missions`, label: dict.patientSubnav.missions },
   ];
 
   return (
