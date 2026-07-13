@@ -10,9 +10,9 @@ export async function getActiveLiveSessions(): Promise<LiveSessionStub[]> {
   const snapshot = await get(ref(getDb(), "liveSessions"));
   if (!snapshot.exists()) return [];
 
-  const data = snapshot.val();
-  const sessions: LiveSessionStub[] = Object.values(data);
-  return sessions.filter(s => s.status === "active");
+  const data = snapshot.val() as Record<string, any>;
+  const sessions: any[] = Object.values(data);
+  return sessions.filter(s => s.status === "active") as LiveSessionStub[];
 }
 
 export async function getLiveSession(sessionId: string): Promise<LiveSessionStub | null> {
