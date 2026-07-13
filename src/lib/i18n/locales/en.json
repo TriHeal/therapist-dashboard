@@ -93,6 +93,7 @@
 
   "home.title": "Dashboard",
   "home.description": "Overview of your patients and recent activity",
+  "home.addPatient": "Add Patient",
   "home.activePatients": "Active Patients",
   "home.sessionsThisWeek": "Sessions This Week",
   "home.openAlerts": "Open Alerts",

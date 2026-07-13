@@ -61,6 +61,7 @@ export type Dictionary = {
   home: {
     title: string;
     description: string;
+    addPatient: string;
     activePatients: string;
     sessionsThisWeek: string;
     openAlerts: string;
