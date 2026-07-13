@@ -1,4 +1,4 @@
 import { getDatabase } from "firebase/database";
-import { app } from "./config";
+import { getFirebaseApp } from "@/lib/auth/firebase-client";
 
-export const database = getDatabase(app, process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL);
+export const database = getDatabase(getFirebaseApp(), process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL);
