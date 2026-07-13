@@ -1,16 +1,25 @@
+import { ref, get } from "firebase/database";
+import { database } from "@/lib/firebase/rtdb";
 import type { LiveSessionStub } from "@/types";
-import { simulateNetworkDelay } from "./_delay";
 
-// Future seam: replace these mock-backed functions with a SignalR client connection
-// (e.g. lib/realtime/signalr-client.ts using @microsoft/signalr) feeding a client-side
-// store consumed by the app/live/* Client Components. Call sites and types stay the same.
+const USE_RTDB = !!process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL;
 
 export async function getActiveLiveSessions(): Promise<LiveSessionStub[]> {
-  await simulateNetworkDelay();
-  return [];
+  if (!USE_RTDB) return [];
+
+  const snapshot = await get(ref(database, "liveSessions"));
+  if (!snapshot.exists()) return [];
+
+  const data = snapshot.val();
+  const sessions: LiveSessionStub[] = Object.values(data);
+  return sessions.filter(s => s.status === "active");
 }
 
-export async function getLiveSession(_sessionId: string): Promise<LiveSessionStub | null> {
-  await simulateNetworkDelay();
-  return null;
+export async function getLiveSession(sessionId: string): Promise<LiveSessionStub | null> {
+  if (!USE_RTDB) return null;
+
+  const snapshot = await get(ref(database, `liveSessions/${sessionId}`));
+  if (!snapshot.exists()) return null;
+
+  return snapshot.val() as LiveSessionStub;
 }
