@@ -1,26 +1,21 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { AppHeader } from "@/components/layout/app-header";
-import { OverviewStatsCards } from "@/components/dashboard/overview-stats-cards";
-import { UpcomingSessionsWidget } from "@/components/dashboard/upcoming-sessions-widget";
-import { RecentAlertsWidget } from "@/components/dashboard/recent-alerts-widget";
-import { ActiveMissionsWidget } from "@/components/missions/active-missions-widget";
+import { PatientRosterSearch } from "@/components/patients/patient-roster-search";
+import { buttonVariants } from "@/components/ui/button";
 import {
   getPatients,
-  getUpcomingSessions,
   getRecentSessions,
   getFlaggedKeywordAlerts,
-  getActiveMissionsAcrossPatients,
 } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-locale";
 
 export default async function DashboardHomePage() {
-  const [{ dict }, patients, upcoming, recentSessions, alerts, activeMissions] = await Promise.all([
+  const [{ dict, locale }, patients, recentSessions, alerts] = await Promise.all([
     getDictionary(),
     getPatients(),
-    getUpcomingSessions(5),
     getRecentSessions(50),
     getFlaggedKeywordAlerts({ sinceDays: 14 }),
-    getActiveMissionsAcrossPatients(5),
   ]);
 
   const activePatients = patients.filter((p) => p.status === "active").length;
@@ -29,25 +24,24 @@ export default async function DashboardHomePage() {
     (s) => new Date(s.startedAt).getTime() >= weekAgo
   ).length;
 
-  const patientsById = new Map(patients.map((p) => [p.id, p]));
-
   return (
     <>
       <AppHeader title={dict.home.title} description={dict.home.description} />
-      <div className="p-6 space-y-6">
-        <OverviewStatsCards
-          activePatients={activePatients}
-          sessionsThisWeek={sessionsThisWeek}
-          openAlerts={alerts.filter((a) => !a.reviewed).length}
-        />
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <UpcomingSessionsWidget sessions={upcoming} patientsById={patientsById} />
-          <RecentAlertsWidget alerts={alerts} />
-          <ActiveMissionsWidget missions={activeMissions} patientsById={patientsById} />
+      <div className="p-6 space-y-8">
+        
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold tracking-tight">{dict.patientsPage.title}</h2>
+            <Link href="/therapist/patients/new" className={buttonVariants({ variant: "default" })}>
+              <Plus className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0" />
+              {dict.home.addPatient}
+            </Link>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border p-4">
+            <PatientRosterSearch patients={patients} dict={dict} locale={locale} />
+          </div>
         </div>
-        <Link href="/therapist/schedule" className="text-sm text-primary hover:underline">
-          {dict.home.viewSchedule}
-        </Link>
       </div>
     </>
   );

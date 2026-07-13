@@ -33,10 +33,18 @@ export type Dictionary = {
     noResults: string;
   };
   patientTable: { name: string; age: string; status: string; lastSession: string; parentSharing: string };
-  patientSubnav: { overview: string; sessions: string; progress: string; missions: string };
+  patientSubnav: { overview: string; timeline: string; progress: string; missions: string };
   patientOverview: { noCompletedSessions: string; missionsTitle: string; noActiveMissions: string };
   sessionsPage: { noSessions: string };
   syncMetrics: { title: string; breathingSync: string; tapSync: string; timeToSync: string; desyncEvents: string };
+  syncMetricsInsights: {
+    breathingHigh: string;
+    breathingLow: string;
+    timeToSyncFast: string;
+    timeToSyncSlow: string;
+    desyncHigh: string;
+    overallGood: string;
+  };
   sessionSummary: { timeToSync: string };
   sessionDetail: {
     title: string;
@@ -61,6 +69,7 @@ export type Dictionary = {
   home: {
     title: string;
     description: string;
+    addPatient: string;
     activePatients: string;
     sessionsThisWeek: string;
     openAlerts: string;

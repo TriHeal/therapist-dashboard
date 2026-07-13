@@ -83,11 +83,3 @@ PR 1  Dashboard Simplification
 | 2 | `feat/ui-patient-overview` | Focus patient page on missions |
 | 3 | `feat/ui-metrics-insights` | Translate sync metrics into textual insights |
 | 4 | `feat/ui-timeline` | Replace Sessions Diary with an Activity Timeline |
-## PR 5 — Remove Alerts UI
-
-**Branch:** `feat/ui-remove-alerts`
-
-### Changes
-- Completely remove the Alerts page (`/therapist/alerts`).
-- Remove the "Alerts" link from the main sidebar navigation.
-- Keep any background alert generation intact in the database/backend, but remove the therapist's UI access to it to further declutter the app.
