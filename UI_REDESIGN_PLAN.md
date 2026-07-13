@@ -83,3 +83,60 @@ PR 1  Dashboard Simplification
 | 2 | `feat/ui-patient-overview` | Focus patient page on missions |
 | 3 | `feat/ui-metrics-insights` | Translate sync metrics into textual insights |
 | 4 | `feat/ui-timeline` | Replace Sessions Diary with an Activity Timeline |
+
+---
+
+## Phase 2: Patient-Centric Architecture (Tree Navigation)
+
+| PR | Branch | Scope |
+|---|---|---|
+| 5 | `feat/pr-dashboard-merge` | Merge Dashboard into Patients list |
+| 6 | `feat/pr-add-patient-form` | "Add Patient" Modal Dialog & Server Action (Mocks + API) |
+| 7 | `feat/pr-remove-globals` | Delete global Schedule and Live Sessions screens |
+| 8 | `feat/pr-patient-tree` | Sidebar becomes a Patient Tree; move Live Session into patient routes |
+
+---
+
+## PR 5 — Merge Dashboard & Patients List
+
+**Branch:** `feat/pr-dashboard-merge`
+
+### Changes
+- Delete the old `/therapist` Dashboard page.
+- Set the root `/therapist` path to redirect directly to `/therapist/patients`.
+- Move the `+` "Add Patient" button into the Patients roster view.
+
+---
+
+## PR 6 — Add Patient Form & Action
+
+**Branch:** `feat/pr-add-patient-form`
+
+### Changes
+- Convert the `+` button into a trigger for a "Add Patient" Modal (Dialog) instead of navigating to a new page.
+- Build a cute, user-friendly form inside the Dialog with `displayName` and `age` fields.
+- Implement a Server Action (`createPatient`) in `src/lib/actions/patients.actions.ts`.
+- The action will support both Mock Data and real Backend POST to `/patients` (using `USE_API`), consistent with existing data services.
+
+---
+
+## PR 7 — Remove Global Modules
+
+**Branch:** `feat/pr-remove-globals`
+
+### Changes
+- Delete the `Schedule` module entirely.
+- Delete the global `Live Sessions` page (`/therapist/live`).
+
+---
+
+## PR 8 — Patient-Centric Sidebar (The Tree)
+
+**Branch:** `feat/pr-patient-tree`
+
+### Changes
+- Modify `<AppSidebar>` to read the `patientId` from the URL.
+- If in a patient context, the sidebar replaces global links with a "Patient Tree":
+  - **Live Session:** (Moved to `/therapist/patients/[patientId]/live`)
+  - **Timeline & Review:** (`/therapist/patients/[patientId]/timeline`)
+  - **Back to Patients:** Escape hatch back to the global list.
