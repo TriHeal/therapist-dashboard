@@ -93,6 +93,7 @@
 
   "home.title": "לוח בקרה",
   "home.description": "סקירה כללית של המטופלים והפעילות האחרונה",
+  "home.addPatient": "הוספת מטופל",
   "home.activePatients": "מטופלים פעילים",
   "home.sessionsThisWeek": "מפגשים השבוע",
   "home.openAlerts": "התראות פתוחות",
