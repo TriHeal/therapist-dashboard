@@ -10,7 +10,6 @@ export function AppSidebar({ dict, locale }: { dict: Dictionary; locale: Locale 
   const pathname = usePathname();
 
   const navItems = [
-    { href: "/therapist", label: dict.nav.dashboard },
     { href: "/therapist/patients", label: dict.nav.patients },
     { href: "/therapist/schedule", label: dict.nav.schedule },
     { href: "/therapist/live", label: dict.nav.live },
