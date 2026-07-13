@@ -12,5 +12,5 @@ export default async function RootPage() {
     redirect("/login");
   }
 
-  redirect(session.role === Role.Parent ? "/parent" : "/therapist");
+  redirect(session.role === Role.Parent ? "/parent" : "/therapist/patients");
 }
