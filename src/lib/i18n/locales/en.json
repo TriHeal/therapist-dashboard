@@ -65,6 +65,13 @@
   "syncMetrics.timeToSync": "Time to Sync",
   "syncMetrics.desyncEvents": "Desync Events",
 
+  "syncMetricsInsights.breathingHigh": "Excellent breathing synchronization indicates a strong calming response.",
+  "syncMetricsInsights.breathingLow": "Breathing sync is low; consider incorporating more joint breathing exercises.",
+  "syncMetricsInsights.timeToSyncFast": "Quick synchronization indicates strong initial connection and engagement.",
+  "syncMetricsInsights.timeToSyncSlow": "Took longer than usual to sync. Monitor for potential distractions.",
+  "syncMetricsInsights.desyncHigh": "Multiple desync events detected. The patient may be losing focus or struggling with the intensity.",
+  "syncMetricsInsights.overallGood": "Overall session flow was stable and well-regulated.",
+
   "sessionSummary.timeToSync": "Time to sync",
 
   "sessionDetail.title": "Session Detail",

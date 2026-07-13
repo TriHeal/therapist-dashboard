@@ -63,9 +63,16 @@
   "syncMetrics.breathingSync": "סנכרון נשימה",
   "syncMetrics.tapSync": "סנכרון הקשות",
   "syncMetrics.timeToSync": "זמן עד לסנכרון",
-  "syncMetrics.desyncEvents": "אירועי חוסר סנכרון",
+  "syncMetrics.desyncEvents": "אירועי יציאה מסנכרון",
 
-  "sessionSummary.timeToSync": "זמן עד לסנכרון",
+  "syncMetricsInsights.breathingHigh": "סנכרון נשימה מצוין, המעיד על יכולת ויסות והרגעה טובה.",
+  "syncMetricsInsights.breathingLow": "סנכרון הנשימה נמוך. כדאי לשקול תרגול נשימות משותף תכוף יותר.",
+  "syncMetricsInsights.timeToSyncFast": "הגעה מהירה לסנכרון מעידה על חיבור ראשוני חזק ומעורבות גבוהה.",
+  "syncMetricsInsights.timeToSyncSlow": "לקח זמן רב מהרגיל להגיע לסנכרון. מומלץ לשים לב להסחות דעת אפשריות.",
+  "syncMetricsInsights.desyncHigh": "זוהו מספר רב של ניתוקים מהסנכרון. ייתכן שהמטופל מאבד ריכוז או מתקשה עם רמת הקושי.",
+  "syncMetricsInsights.overallGood": "באופן כללי, זרימת הפגישה הייתה יציבה ומווסתת היטב.",
+
+  "sessionSummary.timeToSync": "זמן לסנכרון",
 
   "sessionDetail.title": "פרטי מפגש",
   "sessionDetail.ediHistory": "היסטוריית שלבי EDI",
