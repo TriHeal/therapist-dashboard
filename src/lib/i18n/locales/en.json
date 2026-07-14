@@ -64,6 +64,13 @@
   "syncMetrics.tapSync": "Tap Sync",
   "syncMetrics.timeToSync": "Time to Sync",
   "syncMetrics.desyncEvents": "Desync Events",
+  "syncMetrics.explanations.breathingSync": "Percentage of exercise time where patient's breathing matched the target rhythm.",
+  "syncMetrics.explanations.tapSync": "Patient's tapping accuracy relative to the game's guide rhythm.",
+  "syncMetrics.explanations.timeToSync": "Time elapsed (in seconds) before the patient achieved synchronization.",
+  "syncMetrics.explanations.desyncEvents": "Number of times the patient fell out of sync after initially achieving it.",
+  "syncMetrics.status.stable": "Stable",
+  "syncMetrics.status.needsPractice": "Needs Practice",
+  "syncMetrics.status.attention": "Attention Needed",
 
   "syncMetricsInsights.breathingHigh": "Excellent breathing synchronization indicates a strong calming response.",
   "syncMetricsInsights.breathingLow": "Breathing sync is low; consider incorporating more joint breathing exercises.",
