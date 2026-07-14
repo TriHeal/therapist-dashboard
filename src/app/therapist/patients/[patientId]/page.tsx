@@ -52,7 +52,7 @@ export default async function PatientOverviewPage({
 
         {/* Sync Metrics Section */}
         {latestMetrics ? (
-          <SyncMetricsPanel metrics={latestMetrics} />
+          <SyncMetricsPanel metrics={latestMetrics} dict={dict} />
         ) : (
           <p className="text-sm text-muted-foreground">{dict.patientOverview.noCompletedSessions}</p>
         )}
