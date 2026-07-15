@@ -3,10 +3,15 @@ import { AppHeader } from "@/components/layout/app-header";
 import { PatientSubnav } from "@/components/patients/patient-subnav";
 import { PatientOverviewCard } from "@/components/patients/patient-overview-card";
 import { SyncMetricsPanel } from "@/components/sessions/sync-metrics-panel";
+import { getDictionary } from "@/lib/i18n/get-locale";
 import { ActivityCard } from "@/components/activities/activity-card";
 import { AssignActivityDialog } from "@/components/activities/assign-activity-dialog";
-import { getPatient, getPatientSessions, getSyncMetrics, getPatientActivities } from "@/lib/data";
-import { getDictionary } from "@/lib/i18n/get-locale";
+import {
+  getPatient,
+  getPatientSessions,
+  getSyncMetrics,
+  getPatientActivities,
+} from "@/lib/data";
 
 export default async function PatientOverviewPage({
   params,
