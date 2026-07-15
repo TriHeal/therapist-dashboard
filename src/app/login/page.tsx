@@ -77,7 +77,7 @@ export default function LoginPage() {
             {error && <p className="text-sm text-destructive">{error}</p>}
           </CardContent>
 
-          <CardFooter>
+          <CardFooter className="flex flex-col gap-2">
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "מתחבר..." : "התחברות"}
             </Button>
@@ -109,7 +109,7 @@ export default function LoginPage() {
                     setId(user.id);
                     setPassword(user.password);
                   }}
-                  className="flex items-center justify-between rounded-md border px-3 py-2 text-xs text-start hover:bg-muted/50 transition-colors"
+                  className="flex flex-col items-start gap-1 rounded-md border px-3 py-2 text-xs text-start hover:bg-muted/50 transition-colors"
                 >
                   <span className="text-muted-foreground">{user.label}</span>
                   <span className="font-mono" dir="ltr">
