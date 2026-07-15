@@ -1,6 +1,7 @@
 import { AppHeader } from "@/components/layout/app-header";
 import { PatientRosterSearch } from "@/components/patients/patient-roster-search";
 import { AddPatientDialog } from "@/components/patients/add-patient-dialog";
+import { CreateAccountDialog } from "@/components/accounts/create-account-dialog";
 import { getPatients } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-locale";
 
@@ -10,7 +11,10 @@ export default async function PatientsPage() {
   return (
     <>
       <AppHeader title={dict.patientsPage.title} description={dict.patientsPage.description}>
-        <AddPatientDialog dict={dict} />
+        <div className="flex items-center gap-2">
+          <CreateAccountDialog dict={dict} />
+          <AddPatientDialog dict={dict} />
+        </div>
       </AppHeader>
       <div className="p-6">
         <PatientRosterSearch patients={patients} dict={dict} locale={locale} />
