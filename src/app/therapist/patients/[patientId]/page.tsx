@@ -3,9 +3,9 @@ import { AppHeader } from "@/components/layout/app-header";
 import { PatientSubnav } from "@/components/patients/patient-subnav";
 import { PatientOverviewCard } from "@/components/patients/patient-overview-card";
 import { SyncMetricsPanel } from "@/components/sessions/sync-metrics-panel";
-import { MissionCard } from "@/components/missions/mission-card";
-import { AssignMissionDialog } from "@/components/missions/assign-mission-dialog";
-import { getPatient, getPatientSessions, getSyncMetrics, getPatientMissions } from "@/lib/data";
+import { ActivityCard } from "@/components/activities/activity-card";
+import { AssignActivityDialog } from "@/components/activities/assign-activity-dialog";
+import { getPatient, getPatientSessions, getSyncMetrics, getPatientActivities } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-locale";
 
 export default async function PatientOverviewPage({
@@ -17,9 +17,9 @@ export default async function PatientOverviewPage({
   const [{ dict }, patient] = await Promise.all([getDictionary(), getPatient(patientId)]);
   if (!patient) notFound();
 
-  const [sessions, missions] = await Promise.all([
+  const [sessions, activities] = await Promise.all([
     getPatientSessions(patientId),
-    getPatientMissions(patientId),
+    getPatientActivities(patientId),
   ]);
   const latestCompleted = sessions.find((s) => s.status === "completed" && s.syncMetricsId);
   const latestMetrics = latestCompleted?.syncMetricsId
@@ -33,18 +33,18 @@ export default async function PatientOverviewPage({
       <div className="p-6 space-y-8">
         <PatientOverviewCard patient={patient} />
         
-        {/* Missions Section */}
+        {/* Activities Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold tracking-tight">{dict.missions.title}</h2>
-            <AssignMissionDialog patientId={patientId} dict={dict} />
+            <h2 className="text-lg font-semibold tracking-tight">{dict.activities.title}</h2>
+            <AssignActivityDialog patientId={patientId} dict={dict} />
           </div>
-          {missions.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{dict.missions.noMissions}</p>
+          {activities.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{dict.activities.noActivities}</p>
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {missions.map((mission) => (
-                <MissionCard key={mission.id} mission={mission} />
+              {activities.map((activity) => (
+                <ActivityCard key={activity.id} activity={activity} />
               ))}
             </div>
           )}

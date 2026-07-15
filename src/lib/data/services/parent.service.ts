@@ -1,6 +1,6 @@
-import type { Patient, Mission, ParentReflectionLog } from "@/types";
+import type { Patient, Activity, ParentReflectionLog } from "@/types";
 import { patients } from "../mock/patients.mock";
-import { missions } from "../mock/missions.mock";
+import { activities } from "../mock/activities.mock";
 import { parentReflections } from "../mock/parent-reflections.mock";
 import { sessions } from "../mock/sessions.mock";
 import { simulateNetworkDelay } from "./_delay";
@@ -14,9 +14,9 @@ export async function getMyChild(): Promise<Patient | null> {
   return patients.find((p) => p.id === MY_CHILD_PATIENT_ID) ?? null;
 }
 
-export async function getMyChildMissions(): Promise<Mission[]> {
+export async function getMyChildActivities(): Promise<Activity[]> {
   await simulateNetworkDelay();
-  return missions
+  return activities
     .filter((m) => m.patientId === MY_CHILD_PATIENT_ID)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }

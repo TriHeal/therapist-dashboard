@@ -1,15 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { getDictionary } from "@/lib/i18n/get-locale";
-import type { Mission, Patient } from "@/types";
+import type { Activity, Patient } from "@/types";
 
-export async function ActiveMissionsWidget({
-  missions,
+export async function ActiveActivitiesWidget({
+  activities,
   patientsById,
   title,
   emptyText,
 }: {
-  missions: Mission[];
+  activities: Activity[];
   patientsById?: Map<string, Patient>;
   title?: string;
   emptyText?: string;
@@ -19,13 +19,13 @@ export async function ActiveMissionsWidget({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{title ?? dict.home.activeMissionsWidget}</CardTitle>
+        <CardTitle>{title ?? dict.home.activeActivitiesWidget}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {missions.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{emptyText ?? dict.home.noActiveMissions}</p>
+        {activities.length === 0 ? (
+          <p className="text-sm text-muted-foreground">{emptyText ?? dict.home.noActiveActivities}</p>
         ) : (
-          missions.map((m) => {
+          activities.map((m) => {
             const percent = Math.round((m.completedCount / m.targetCount) * 100);
             return (
               <div key={m.id} className="space-y-1">

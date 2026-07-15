@@ -6,6 +6,6 @@ export * from "./services/trigger-keywords.service";
 export * from "./services/parent-reflections.service";
 export * from "./services/alerts.service";
 export * from "./services/live.service";
-export * from "./services/missions.service";
+export * from "./services/activities.service";
 export * from "./services/parent.service";
 export * from "./services/parent-audits.service";
