@@ -1,4 +1,5 @@
-import { getToken } from "@/lib/firebase/auth";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { AuthError, ApiError } from "./errors";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -8,11 +9,11 @@ export const USE_API = !!BASE_URL;
 
 export async function apiFetch<T>(
   path: string,
-  options: RequestInit & { body?: unknown } = {}
+  options: Omit<RequestInit, 'body'> & { body?: unknown } = {}
 ): Promise<T> {
   if (!BASE_URL) throw new Error("NEXT_PUBLIC_API_BASE_URL is not configured");
 
-  const token = await getToken();
+  const token = (await cookies()).get("session")?.value;
   if (!token) throw new AuthError();
 
   const { body, headers: extraHeaders, ...rest } = options;
@@ -28,10 +29,7 @@ export async function apiFetch<T>(
   });
 
   if (res.status === 401) {
-    if (typeof window !== "undefined") {
-      window.location.href = "/login";
-    }
-    throw new AuthError();
+    redirect("/login");
   }
 
   if (!res.ok) throw new ApiError(res.status, await res.text());

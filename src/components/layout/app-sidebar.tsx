@@ -1,22 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import type { Dictionary, Locale } from "@/lib/i18n/dictionaries";
 
 export function AppSidebar({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const pathname = usePathname();
+  const params = useParams();
+  const patientId = params.patientId as string | undefined;
 
-  const navItems = [
-    { href: "/therapist", label: dict.nav.dashboard },
-    { href: "/therapist/patients", label: dict.nav.patients },
-    { href: "/therapist/schedule", label: dict.nav.schedule },
-    { href: "/therapist/live", label: dict.nav.live },
-    { href: "/therapist/alerts", label: dict.nav.alerts },
-    { href: "/therapist/settings", label: dict.nav.settings },
-  ];
+  let navItems;
+
+  if (patientId) {
+    navItems = [
+      { href: "/therapist/patients", label: "← " + dict.nav.patients },
+      { href: `/therapist/patients/${patientId}/live`, label: dict.nav.live || dict.livePage?.title || "Live Session" },
+      { href: `/therapist/patients/${patientId}/timeline`, label: dict.patientSubnav?.timeline || "Timeline" },
+    ];
+  } else {
+    navItems = [
+      { href: "/therapist/patients", label: dict.nav.patients },
+      { href: "/therapist/settings", label: dict.nav.settings },
+    ];
+  }
 
   return (
     <aside className="w-56 shrink-0 border-e bg-sidebar h-full flex flex-col">

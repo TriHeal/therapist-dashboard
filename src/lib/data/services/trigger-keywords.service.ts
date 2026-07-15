@@ -1,8 +1,8 @@
+import { apiFetch, USE_API } from "@/lib/api/client";
 import type { TriggerKeyword } from "@/types";
 import { triggerKeywords } from "../mock/trigger-keywords.mock";
-import { simulateNetworkDelay } from "./_delay";
 
 export async function getTriggerKeywordsForSession(sessionId: string): Promise<TriggerKeyword[]> {
-  await simulateNetworkDelay();
+  if (USE_API) return apiFetch<TriggerKeyword[]>(`/sessions/${sessionId}/keywords`);
   return triggerKeywords.filter((kw) => kw.sessionId === sessionId);
 }
