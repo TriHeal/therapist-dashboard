@@ -192,6 +192,39 @@ export type Dictionary = {
     recentTitle: string;
     noEntries: string;
   };
+  provisioning: {
+    createAccount: string;
+    dialogTitle: string;
+    dialogDescription: string;
+    parentEmail: string;
+    parentPhone: string;
+    emailPlaceholder: string;
+    phonePlaceholder: string;
+    submit: string;
+    sending: string;
+    inviteSentTitle: string;
+    inviteSentDesc: string;
+    mockNotice: string;
+    copyCode: string;
+    copied: string;
+    createAnother: string;
+    errorInvalidEmail: string;
+    errorInvalidPhone: string;
+    errorSmsFailed: string;
+    errorGeneric: string;
+  };
+  sessionCode: {
+    generate: string;
+    dialogTitle: string;
+    dialogDescription: string;
+    expiresIn: string;
+    expired: string;
+    copy: string;
+    copied: string;
+    regenerate: string;
+    generating: string;
+    errorGeneric: string;
+  };
 };
 
 function buildDictionary(flat: Record<string, string>): Dictionary {

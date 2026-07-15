@@ -5,6 +5,7 @@ import { PatientOverviewCard } from "@/components/patients/patient-overview-card
 import { SyncMetricsPanel } from "@/components/sessions/sync-metrics-panel";
 import { MissionCard } from "@/components/missions/mission-card";
 import { AssignMissionDialog } from "@/components/missions/assign-mission-dialog";
+import { GenerateSessionCodeDialog } from "@/components/sessions/generate-session-code-dialog";
 import { getPatient, getPatientSessions, getSyncMetrics, getPatientMissions } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-locale";
 
@@ -28,7 +29,9 @@ export default async function PatientOverviewPage({
 
   return (
     <>
-      <AppHeader title={patient.displayName} />
+      <AppHeader title={patient.displayName}>
+        <GenerateSessionCodeDialog patientId={patient.id} dict={dict} />
+      </AppHeader>
       <PatientSubnav patientId={patientId} dict={dict} />
       <div className="p-6 space-y-8">
         <PatientOverviewCard patient={patient} />
