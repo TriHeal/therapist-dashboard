@@ -64,6 +64,13 @@
   "syncMetrics.tapSync": "סנכרון הקשות",
   "syncMetrics.timeToSync": "זמן עד לסנכרון",
   "syncMetrics.desyncEvents": "אירועי יציאה מסנכרון",
+  "syncMetrics.explanations.breathingSync": "אחוז הזמן במהלך המשימה שבו קצב הנשימה של המטופל תאם למקצב המטרה שהוגדר באפליקציה.",
+  "syncMetrics.explanations.tapSync": "רמת הדיוק של המטופל בלחיצות על המסך ביחס לקצב המנחה של המשחק.",
+  "syncMetrics.explanations.timeToSync": "משך הזמן (בשניות) שלקח למטופל מרגע תחילת התרגיל ועד שהצליח להסתנכרן עם מקצב המטרה.",
+  "syncMetrics.explanations.desyncEvents": "מספר הפעמים שבהם המטופל יצא מהקצב (איבד סנכרון) במהלך התרגיל, לאחר שכבר הגיע לסנכרון.",
+  "syncMetrics.status.stable": "יציב",
+  "syncMetrics.status.needsPractice": "נדרש תרגול",
+  "syncMetrics.status.attention": "תשומת לב נדרשת",
 
   "syncMetricsInsights.breathingHigh": "סנכרון נשימה מצוין, המעיד על יכולת ויסות והרגעה טובה.",
   "syncMetricsInsights.breathingLow": "סנכרון הנשימה נמוך. כדאי לשקול תרגול נשימות משותף תכוף יותר.",

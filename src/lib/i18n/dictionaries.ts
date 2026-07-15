@@ -36,7 +36,24 @@ export type Dictionary = {
   patientSubnav: { overview: string; timeline: string; progress: string; missions: string };
   patientOverview: { noCompletedSessions: string; missionsTitle: string; noActiveMissions: string };
   sessionsPage: { noSessions: string };
-  syncMetrics: { title: string; breathingSync: string; tapSync: string; timeToSync: string; desyncEvents: string };
+  syncMetrics: {
+    title: string;
+    breathingSync: string;
+    tapSync: string;
+    timeToSync: string;
+    desyncEvents: string;
+    explanations: {
+      breathingSync: string;
+      tapSync: string;
+      timeToSync: string;
+      desyncEvents: string;
+    };
+    status: {
+      stable: string;
+      needsPractice: string;
+      attention: string;
+    };
+  };
   syncMetricsInsights: {
     breathingHigh: string;
     breathingLow: string;
