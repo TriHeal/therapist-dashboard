@@ -4,7 +4,7 @@ import { getIdTokenResult, signInWithCustomToken, signOut } from "firebase/auth"
 import { getFirebaseAuth } from "./firebase-client";
 import type { Role } from "@/types/auth";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3003";
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://backend-heal.onrender.com";
 
 type LoginResponse = { customToken: string; role: Role };
 
