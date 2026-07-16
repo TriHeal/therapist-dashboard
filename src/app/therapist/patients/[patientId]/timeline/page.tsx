@@ -4,7 +4,7 @@ import { PatientSubnav } from "@/components/patients/patient-subnav";
 import { SessionSummaryCard } from "@/components/sessions/session-summary-card";
 import { getPatient, getPatientSessions } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-locale";
-import { getPatientMissions } from "@/lib/data/services/missions.service";
+import { getPatientActivities } from "@/lib/data/services/activities.service";
 import { getPatientAudits } from "@/lib/data/services/parent-audits.service";
 
 export default async function PatientTimelinePage({
@@ -16,9 +16,9 @@ export default async function PatientTimelinePage({
   const [{ dict }, patient] = await Promise.all([getDictionary(), getPatient(patientId)]);
   if (!patient) notFound();
 
-  const [sessions, missions, audits] = await Promise.all([
+  const [sessions, activities, audits] = await Promise.all([
     getPatientSessions(patientId),
-    getPatientMissions(patientId),
+    getPatientActivities(patientId),
     getPatientAudits(patientId)
   ]);
 
@@ -33,9 +33,9 @@ export default async function PatientTimelinePage({
     });
   });
 
-  missions.filter(m => m.status === "completed" && m.completedAt).forEach(m => {
+  activities.filter(m => m.status === "completed" && m.completedAt).forEach(m => {
     timelineEvents.push({
-      type: "mission",
+      type: "activity",
       date: new Date(m.completedAt!),
       data: m
     });
@@ -70,7 +70,7 @@ export default async function PatientTimelinePage({
                   </div>
                 );
               }
-              if (event.type === "mission") {
+              if (event.type === "activity") {
                 return (
                   <div key={i} className="relative">
                     <div className="absolute -left-6 mt-1.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-background" />
@@ -78,9 +78,9 @@ export default async function PatientTimelinePage({
                       <p className="text-xs text-muted-foreground mb-1">
                         {event.date.toLocaleDateString()}
                       </p>
-                      <h4 className="font-semibold text-sm">Mission Completed: {event.data.title}</h4>
+                      <h4 className="font-semibold text-sm">Activity Completed: {event.data.title}</h4>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Type: {dict.missions.type[event.data.type as keyof typeof dict.missions.type] || event.data.type}
+                        Type: {dict.activities.type[event.data.type as keyof typeof dict.activities.type] || event.data.type}
                       </p>
                     </div>
                   </div>

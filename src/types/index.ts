@@ -5,7 +5,7 @@ export * from "./edi-stepper";
 export * from "./trigger-keyword";
 export * from "./parent-reflection";
 export * from "./live";
-export * from "./mission";
+export * from "./activity";
 export * from "./parent-audit";
 
 export type FlaggedAlert = import("./trigger-keyword").TriggerKeyword & {

@@ -1,18 +1,18 @@
 import { AppHeader } from "@/components/layout/app-header";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { getMyChild, getMyChildMissions, getMyChildReflections } from "@/lib/data";
+import { getMyChild, getMyChildActivities, getMyChildReflections } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-locale";
 
 export default async function ParentHomePage() {
-  const [{ dict }, child, missions, reflections] = await Promise.all([
+  const [{ dict }, child, activities, reflections] = await Promise.all([
     getDictionary(),
     getMyChild(),
-    getMyChildMissions(),
+    getMyChildActivities(),
     getMyChildReflections(),
   ]);
 
-  const activeMissions = missions.filter((m) => m.status === "active");
+  const activeActivities = activities.filter((m) => m.status === "active");
 
   return (
     <>
@@ -34,22 +34,22 @@ export default async function ParentHomePage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card size="sm">
             <CardHeader>
-              <CardTitle>{dict.parentHome.activeMissionsTitle}</CardTitle>
+              <CardTitle>{dict.parentHome.activeActivitiesTitle}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {activeMissions.length === 0 ? (
+              {activeActivities.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  {dict.parentHome.noActiveMissions}
+                  {dict.parentHome.noActiveActivities}
                 </p>
               ) : (
-                activeMissions.map((mission) => (
-                  <div key={mission.id} className="space-y-1">
-                    <p className="text-sm font-medium">{mission.title}</p>
+                activeActivities.map((activity) => (
+                  <div key={activity.id} className="space-y-1">
+                    <p className="text-sm font-medium">{activity.title}</p>
                     <Progress
-                      value={(mission.completedCount / mission.targetCount) * 100}
+                      value={(activity.completedCount / activity.targetCount) * 100}
                     />
                     <p className="text-xs text-muted-foreground">
-                      {mission.completedCount}/{mission.targetCount}
+                      {activity.completedCount}/{activity.targetCount}
                     </p>
                   </div>
                 ))

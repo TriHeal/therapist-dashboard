@@ -1,13 +1,13 @@
-import type { Mission } from "@/types";
+import type { Activity } from "@/types";
 import { patients } from "./patients.mock";
 
 // Mutable in-memory mock store (resets on server restart) — stands in for a future
-// database table. Server actions in lib/actions/missions.actions.ts mutate this array
-// directly so the demo flows (assign mission, log practice) feel real across requests.
-export const missions: Mission[] = patients
+// database table. Server actions in lib/actions/activities.actions.ts mutate this array
+// directly so the demo flows (assign activity, log practice) feel real across requests.
+export const activities: Activity[] = patients
   .filter((p) => p.status === "active")
   .flatMap((patient, idx) => {
-    const created: Mission[] = [
+    const created: Activity[] = [
       {
         id: `m-${patient.id}-1`,
         patientId: patient.id,
@@ -35,9 +35,9 @@ export const missions: Mission[] = patients
     return created;
   });
 
-let missionIdCounter = missions.length + 1;
+let missionIdCounter = activities.length + 1;
 
-export function nextMissionId() {
+export function nextActivityId() {
   missionIdCounter += 1;
   return `m-custom-${missionIdCounter}`;
 }
