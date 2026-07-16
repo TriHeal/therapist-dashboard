@@ -4,12 +4,14 @@ import { syncMetrics } from "../mock/sync-metrics.mock";
 import { sessions } from "../mock/sessions.mock";
 
 export async function getSyncMetrics(sessionId: string): Promise<SyncMetrics | null> {
-  if (USE_API) return apiFetch<SyncMetrics | null>(`/sessions/${sessionId}/metrics`);
+  // Keep under local mock fallback until backend implements them
+  // if (USE_API) return apiFetch<SyncMetrics | null>(`/sessions/${sessionId}/metrics`);
   return syncMetrics.find((m) => m.sessionId === sessionId) ?? null;
 }
 
 export async function getSyncTrend(patientId: string): Promise<SyncTrendPoint[]> {
-  if (USE_API) return apiFetch<SyncTrendPoint[]>(`/patients/${patientId}/metrics/trend`);
+  // Keep under local mock fallback until backend implements them
+  // if (USE_API) return apiFetch<SyncTrendPoint[]>(`/patients/${patientId}/metrics/trend`);
   const patientSessions = sessions
     .filter((s) => s.patientId === patientId && s.status === "completed")
     .sort((a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime());
@@ -32,7 +34,8 @@ export async function getSyncTrend(patientId: string): Promise<SyncTrendPoint[]>
 export async function getRoutineVsFloodingComparison(
   patientId: string
 ): Promise<RoutineVsFloodingPoint[]> {
-  if (USE_API) return apiFetch<RoutineVsFloodingPoint[]>(`/patients/${patientId}/metrics/comparison`);
+  // Keep under local mock fallback until backend implements them
+  // if (USE_API) return apiFetch<RoutineVsFloodingPoint[]>(`/patients/${patientId}/metrics/comparison`);
   const types: SessionType[] = ["clinic", "routine", "flooding"];
   return types.map((type) => {
     const matching = sessions.filter(

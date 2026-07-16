@@ -5,10 +5,11 @@ import { sessions } from "../mock/sessions.mock";
 import { patients } from "../mock/patients.mock";
 
 export async function getFlaggedKeywordAlerts(opts?: { sinceDays?: number }): Promise<FlaggedAlert[]> {
-  if (USE_API) {
-    const query = opts?.sinceDays ? `?sinceDays=${opts.sinceDays}` : "";
-    return apiFetch<FlaggedAlert[]>(`/alerts${query}`);
-  }
+  // Keep under local mock fallback until backend implements them
+  // if (USE_API) {
+  //   const query = opts?.sinceDays ? `?sinceDays=${opts.sinceDays}` : "";
+  //   return apiFetch<FlaggedAlert[]>(`/alerts${query}`);
+  // }
 
   const cutoff = opts?.sinceDays
     ? Date.now() - opts.sinceDays * 24 * 60 * 60 * 1000

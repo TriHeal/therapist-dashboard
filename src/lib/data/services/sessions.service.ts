@@ -2,14 +2,23 @@ import { apiFetch, USE_API } from "@/lib/api/client";
 import type { Session } from "@/types";
 import { sessions } from "../mock/sessions.mock";
 
+function parseBackendDate(val: any): string {
+  if (!val) return new Date().toISOString();
+  if (typeof val === "object" && (val._seconds !== undefined || val.seconds !== undefined)) {
+    const secs = val._seconds ?? val.seconds;
+    return new Date(secs * 1000).toISOString();
+  }
+  return new Date(val).toISOString();
+}
+
 function mapBackendSession(s: any): Session {
   return {
     id: s.id,
     patientId: s.patientId,
     type: "clinic", // Default type since backend doesn't have it
     status: s.status === "active" ? "in_progress" : "completed",
-    startedAt: s.createdAt,
-    endedAt: s.status === "ended" ? s.updatedAt : undefined,
+    startedAt: parseBackendDate(s.createdAt),
+    endedAt: s.status === "ended" ? parseBackendDate(s.updatedAt) : undefined,
     ediEventIds: [],
     triggerKeywordIds: [],
   };
