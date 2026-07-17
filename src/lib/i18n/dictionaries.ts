@@ -1,4 +1,4 @@
-import type { PatientStatus, SessionStatus, SessionType, TriggerSeverity, MissionType, MissionStatus } from "@/types";
+import type { PatientStatus, SessionStatus, SessionType, TriggerSeverity, ActivityType, ActivityStatus, TriggerType } from "@/types";
 import { unflatten } from "./unflatten";
 import he from "./locales/he.json";
 import en from "./locales/en.json";
@@ -33,10 +33,35 @@ export type Dictionary = {
     noResults: string;
   };
   patientTable: { name: string; age: string; status: string; lastSession: string; parentSharing: string };
-  patientSubnav: { overview: string; sessions: string; progress: string; missions: string };
-  patientOverview: { noCompletedSessions: string; missionsTitle: string; noActiveMissions: string };
+  patientSubnav: { overview: string; timeline: string; progress: string; activities: string };
+  patientOverview: { noCompletedSessions: string; missionsTitle: string; noActiveActivities: string };
   sessionsPage: { noSessions: string };
-  syncMetrics: { title: string; breathingSync: string; tapSync: string; timeToSync: string; desyncEvents: string };
+  syncMetrics: {
+    title: string;
+    breathingSync: string;
+    tapSync: string;
+    timeToSync: string;
+    desyncEvents: string;
+    explanations: {
+      breathingSync: string;
+      tapSync: string;
+      timeToSync: string;
+      desyncEvents: string;
+    };
+    status: {
+      stable: string;
+      needsPractice: string;
+      attention: string;
+    };
+  };
+  syncMetricsInsights: {
+    breathingHigh: string;
+    breathingLow: string;
+    timeToSyncFast: string;
+    timeToSyncSlow: string;
+    desyncHigh: string;
+    overallGood: string;
+  };
   sessionSummary: { timeToSync: string };
   sessionDetail: {
     title: string;
@@ -53,10 +78,15 @@ export type Dictionary = {
     syncImprovementTitle: string;
     notEnoughData: string;
     comparisonTitle: string;
+    auditTrendTitle: string;
+    auditScoreLabel: string;
+    auditListTitle: string;
+    noAudits: string;
   };
   home: {
     title: string;
     description: string;
+    addPatient: string;
     activePatients: string;
     sessionsThisWeek: string;
     openAlerts: string;
@@ -64,8 +94,8 @@ export type Dictionary = {
     noScheduled: string;
     recentAlerts: string;
     noAlertsRecent: string;
-    activeMissionsWidget: string;
-    noActiveMissions: string;
+    activeActivitiesWidget: string;
+    noActiveActivities: string;
     viewSchedule: string;
   };
   alertsPage: {
@@ -109,7 +139,7 @@ export type Dictionary = {
     boatProgress: string;
   };
   settingsPage: { title: string; description: string; sharingTitle: string; sharingDesc: string };
-  missions: {
+  activities: {
     title: string;
     assignNew: string;
     dialogTitle: string;
@@ -127,43 +157,61 @@ export type Dictionary = {
     typeRoutine: string;
     typeFloodingPrep: string;
     typeCustom: string;
-    noMissions: string;
+    noActivities: string;
     completedOn: string;
-  } & { status: Record<MissionStatus, string> } & { type: Record<MissionType, string> };
+  } & { status: Record<ActivityStatus, string> } & { type: Record<ActivityType, string> };
   schedule: { title: string; description: string; noUpcoming: string };
   locale: { hebrew: string; english: string };
-  parentNav: { appName: string; home: string; missions: string; reflections: string };
+  parentNav: { appName: string; home: string; activities: string; reflections: string; audit: string };
   parentHome: {
     title: string;
     description: string;
     childCard: string;
-    activeMissionsTitle: string;
-    noActiveMissions: string;
+    activeActivitiesTitle: string;
+    noActiveActivities: string;
     recentReflectionsTitle: string;
     noReflections: string;
   };
-  parentMissionsPage: { title: string; description: string; noMissions: string };
+  parentActivitiesPage: { title: string; description: string; noActivities: string };
   parentReflectionsPage: { title: string; description: string; noReflections: string };
+  parentAuditPage: {
+    title: string;
+    description: string;
+    noCompletedSession: string;
+    triggerLabel: string;
+    triggerTypes: Record<TriggerType, string>;
+    scoreLabel: string;
+    scoreLow: string;
+    scoreHigh: string;
+    noteLabel: string;
+    noteOptional: string;
+    submit: string;
+    saving: string;
+    saved: string;
+    requiredHint: string;
+    recentTitle: string;
+    noEntries: string;
+  };
 };
 
 function buildDictionary(flat: Record<string, string>): Dictionary {
-  const nested = unflatten(flat) as Omit<Dictionary, "missions"> & {
-    missions: Omit<Dictionary["missions"], "status" | "type">;
+  const nested = unflatten(flat) as Omit<Dictionary, "activities"> & {
+    activities: Omit<Dictionary["activities"], "status" | "type">;
   };
 
   return {
     ...nested,
-    missions: {
-      ...nested.missions,
+    activities: {
+      ...nested.activities,
       status: {
-        active: nested.missions.statusActive,
-        completed: nested.missions.statusCompleted,
-        paused: nested.missions.statusPaused,
+        active: nested.activities.statusActive,
+        completed: nested.activities.statusCompleted,
+        paused: nested.activities.statusPaused,
       },
       type: {
-        routine: nested.missions.typeRoutine,
-        "flooding-prep": nested.missions.typeFloodingPrep,
-        custom: nested.missions.typeCustom,
+        routine: nested.activities.typeRoutine,
+        "flooding-prep": nested.activities.typeFloodingPrep,
+        custom: nested.activities.typeCustom,
       },
     },
   };

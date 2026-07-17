@@ -7,14 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { login } from "@/lib/auth/login";
-import { Role } from "@/types/auth";
 
 const DEV_USERS = [
   { label: "מטפל/ת", id: "123456789", password: "test1234!" },
@@ -33,11 +32,10 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      const role = await login(id, password);
-      router.push(role === Role.Parent ? "/parent" : "/therapist");
-      router.refresh();
-    } catch {
-      setError("שם משתמש או סיסמה שגויים");
+      await login(id, password);
+      router.push("/");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "שגיאה בהתחברות");
     } finally {
       setIsSubmitting(false);
     }
@@ -79,10 +77,20 @@ export default function LoginPage() {
             {error && <p className="text-sm text-destructive">{error}</p>}
           </CardContent>
 
-          <CardFooter>
+          <CardFooter className="flex flex-col gap-2">
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "מתחבר..." : "התחברות"}
             </Button>
+            {process.env.NODE_ENV !== "production" && (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => router.push("/parent")}
+              >
+                מעבר למסך הורה (זמני, ללא התחברות)
+              </Button>
+            )}
           </CardFooter>
         </form>
 
@@ -101,7 +109,7 @@ export default function LoginPage() {
                     setId(user.id);
                     setPassword(user.password);
                   }}
-                  className="flex items-center justify-between rounded-md border px-3 py-2 text-xs text-start hover:bg-muted/50 transition-colors"
+                  className="flex flex-col items-start gap-1 rounded-md border px-3 py-2 text-xs text-start hover:bg-muted/50 transition-colors"
                 >
                   <span className="text-muted-foreground">{user.label}</span>
                   <span className="font-mono" dir="ltr">
