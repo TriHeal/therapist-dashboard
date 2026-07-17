@@ -1,13 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import type { Dictionary, Locale } from "@/lib/i18n/dictionaries";
+import { logout } from "@/lib/auth/login";
 
 export function AppSidebar({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleLogout() {
+    await logout();
+    router.replace("/login");
+    router.refresh();
+  }
 
   const navItems = [
     { href: "/therapist", label: dict.nav.dashboard },
@@ -41,9 +49,17 @@ export function AppSidebar({ dict, locale }: { dict: Dictionary; locale: Locale 
           );
         })}
       </nav>
-      <div className="mt-auto">
-        <LocaleSwitcher locale={locale} />
-      </div>
+     <div className="mt-auto flex flex-col gap-2 p-2">
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="rounded-md px-3 py-2 text-start text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent/50"
+      >
+        {dict.nav.logout}
+      </button>
+      
+      <LocaleSwitcher locale={locale} />
+    </div>
     </aside>
   );
 }
