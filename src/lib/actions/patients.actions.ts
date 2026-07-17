@@ -17,7 +17,7 @@ export async function createPatient(data: {
       newPatient = await apiFetch<Patient>(`/patients`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: data,
       });
     } else {
       newPatient = {
