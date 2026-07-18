@@ -33,7 +33,7 @@ export type Dictionary = {
     noResults: string;
   };
   patientTable: { name: string; age: string; status: string; lastSession: string; parentSharing: string };
-  patientSubnav: { overview: string; timeline: string; progress: string; activities: string };
+  patientSubnav: { overview: string; sessions: string; timeline: string; progress: string; activities: string };
   patientOverview: { noCompletedSessions: string; missionsTitle: string; noActiveActivities: string };
   sessionsPage: { noSessions: string };
   syncMetrics: {
