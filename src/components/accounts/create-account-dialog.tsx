@@ -25,14 +25,23 @@ function normalizePhone(raw: string) {
   return raw.replace(/[\s-]/g, "");
 }
 
-export function CreateAccountDialog({ dict }: { dict: Dictionary }) {
+export function CreateAccountDialog({
+  dict,
+  patientId,
+}: {
+  dict: Dictionary;
+  patientId: string;
+}) {
   const t = dict.provisioning;
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<{ phone: string; code?: string } | null>(null);
+  const [success, setSuccess] = useState<{
+    phone: string;
+    code?: string;
+  } | null>(null);
   const [copied, setCopied] = useState(false);
 
   const emailValid = EMAIL_RE.test(email.trim());
@@ -61,6 +70,7 @@ export function CreateAccountDialog({ dict }: { dict: Dictionary }) {
     const result = await createParentAccount({
       email: formData.get("email") as string,
       phone: formData.get("phone") as string,
+      childId: patientId,
     });
 
     setLoading(false);
@@ -112,12 +122,22 @@ export function CreateAccountDialog({ dict }: { dict: Dictionary }) {
               </p>
               {success.code && (
                 <div className="space-y-2 rounded-lg border border-dashed border-input bg-muted/40 p-3">
-                  <p className="text-xs text-muted-foreground">{t.mockNotice}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t.mockNotice}
+                  </p>
                   <div className="flex items-center justify-between gap-2">
-                    <code dir="ltr" className="font-mono text-xl font-semibold tracking-[0.25em]">
+                    <code
+                      dir="ltr"
+                      className="font-mono text-xl font-semibold tracking-[0.25em]"
+                    >
                       {success.code}
                     </code>
-                    <Button type="button" variant="ghost" size="sm" onClick={copyCode}>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={copyCode}
+                    >
                       {copied ? (
                         <Check className="w-4 h-4 mr-1.5 rtl:ml-1.5 rtl:mr-0" />
                       ) : (

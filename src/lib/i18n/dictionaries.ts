@@ -1,4 +1,12 @@
-import type { PatientStatus, SessionStatus, SessionType, TriggerSeverity, ActivityType, ActivityStatus, TriggerType } from "@/types";
+import type {
+  PatientStatus,
+  SessionStatus,
+  SessionType,
+  TriggerSeverity,
+  ActivityType,
+  ActivityStatus,
+  TriggerType,
+} from "@/types";
 import { unflatten } from "./unflatten";
 import he from "./locales/he.json";
 import en from "./locales/en.json";
@@ -7,7 +15,16 @@ export type Locale = "he" | "en";
 export const LOCALE_COOKIE = "locale";
 
 export type Dictionary = {
-  nav: { appName: string; dashboard: string; patients: string; schedule: string; live: string; alerts: string; settings: string; logout: string };
+  nav: {
+    appName: string;
+    dashboard: string;
+    patients: string;
+    schedule: string;
+    live: string;
+    alerts: string;
+    settings: string;
+    logout: string;
+  };
   common: {
     age: string;
     enrolled: string;
@@ -32,9 +49,24 @@ export type Dictionary = {
     filterAllStatuses: string;
     noResults: string;
   };
-  patientTable: { name: string; age: string; status: string; lastSession: string; parentSharing: string };
-  patientSubnav: { overview: string; timeline: string; progress: string; activities: string };
-  patientOverview: { noCompletedSessions: string; missionsTitle: string; noActiveActivities: string };
+  patientTable: {
+    name: string;
+    age: string;
+    status: string;
+    lastSession: string;
+    parentSharing: string;
+  };
+  patientSubnav: {
+    overview: string;
+    timeline: string;
+    progress: string;
+    activities: string;
+  };
+  patientOverview: {
+    noCompletedSessions: string;
+    missionsTitle: string;
+    noActiveActivities: string;
+  };
   sessionsPage: { noSessions: string };
   syncMetrics: {
     title: string;
@@ -71,7 +103,13 @@ export type Dictionary = {
     parentEstimatedTime: string;
     note: string;
   };
-  edi: { fact: string; interpretation: string; separate: string; step: string; noEvents: string };
+  edi: {
+    fact: string;
+    interpretation: string;
+    separate: string;
+    step: string;
+    noEvents: string;
+  };
   triggerKeywords: { none: string };
   progressPage: {
     title: string;
@@ -138,7 +176,12 @@ export type Dictionary = {
     stepperComplete: string;
     boatProgress: string;
   };
-  settingsPage: { title: string; description: string; sharingTitle: string; sharingDesc: string };
+  settingsPage: {
+    title: string;
+    description: string;
+    sharingTitle: string;
+    sharingDesc: string;
+  };
   activities: {
     title: string;
     assignNew: string;
@@ -159,10 +202,18 @@ export type Dictionary = {
     typeCustom: string;
     noActivities: string;
     completedOn: string;
-  } & { status: Record<ActivityStatus, string> } & { type: Record<ActivityType, string> };
+  } & { status: Record<ActivityStatus, string> } & {
+    type: Record<ActivityType, string>;
+  };
   schedule: { title: string; description: string; noUpcoming: string };
   locale: { hebrew: string; english: string };
-  parentNav: { appName: string; home: string; activities: string; reflections: string; audit: string };
+  parentNav: {
+    appName: string;
+    home: string;
+    activities: string;
+    reflections: string;
+    audit: string;
+  };
   parentHome: {
     title: string;
     description: string;
@@ -172,8 +223,16 @@ export type Dictionary = {
     recentReflectionsTitle: string;
     noReflections: string;
   };
-  parentActivitiesPage: { title: string; description: string; noActivities: string };
-  parentReflectionsPage: { title: string; description: string; noReflections: string };
+  parentActivitiesPage: {
+    title: string;
+    description: string;
+    noActivities: string;
+  };
+  parentReflectionsPage: {
+    title: string;
+    description: string;
+    noReflections: string;
+  };
   parentAuditPage: {
     title: string;
     description: string;
@@ -213,18 +272,7 @@ export type Dictionary = {
     errorSmsFailed: string;
     errorGeneric: string;
   };
-  sessionCode: {
-    generate: string;
-    dialogTitle: string;
-    dialogDescription: string;
-    expiresIn: string;
-    expired: string;
-    copy: string;
-    copied: string;
-    regenerate: string;
-    generating: string;
-    errorGeneric: string;
-  };
+
 };
 
 function buildDictionary(flat: Record<string, string>): Dictionary {

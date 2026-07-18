@@ -8,7 +8,6 @@ export * from "./live";
 export * from "./activity";
 export * from "./parent-audit";
 export * from "./parent-account";
-export * from "./session-code";
 
 export type FlaggedAlert = import("./trigger-keyword").TriggerKeyword & {
   patientId: string;

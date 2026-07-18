@@ -249,16 +249,5 @@
   "provisioning.errorInvalidEmail": "Please enter a valid email address.",
   "provisioning.errorInvalidPhone": "Please enter a valid mobile number.",
   "provisioning.errorSmsFailed": "Account created, but sending the SMS failed. Check your Twilio settings.",
-  "provisioning.errorGeneric": "Something went wrong. Please try again.",
-
-  "sessionCode.generate": "Generate Session Code",
-  "sessionCode.dialogTitle": "Account activation code",
-  "sessionCode.dialogDescription": "Share this one-time code with the parent/child to activate their account. It expires soon.",
-  "sessionCode.expiresIn": "Expires in",
-  "sessionCode.expired": "Expired",
-  "sessionCode.copy": "Copy code",
-  "sessionCode.copied": "Copied ✓",
-  "sessionCode.regenerate": "New code",
-  "sessionCode.generating": "Generating…",
-  "sessionCode.errorGeneric": "Couldn't generate a code. Please try again."
+  "provisioning.errorGeneric": "Something went wrong. Please try again."
 }

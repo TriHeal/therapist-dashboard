@@ -12,6 +12,7 @@ import {
   getSyncMetrics,
   getPatientActivities,
 } from "@/lib/data";
+import { CreateAccountDialog } from "@/components/accounts/create-account-dialog";
 
 export default async function PatientOverviewPage({
   params,
@@ -19,33 +20,44 @@ export default async function PatientOverviewPage({
   params: Promise<{ patientId: string }>;
 }) {
   const { patientId } = await params;
-  const [{ dict }, patient] = await Promise.all([getDictionary(), getPatient(patientId)]);
+  const [{ dict }, patient] = await Promise.all([
+    getDictionary(),
+    getPatient(patientId),
+  ]);
   if (!patient) notFound();
 
   const [sessions, activities] = await Promise.all([
     getPatientSessions(patientId),
     getPatientActivities(patientId),
   ]);
-  const latestCompleted = sessions.find((s) => s.status === "completed" && s.syncMetricsId);
+  const latestCompleted = sessions.find(
+    (s) => s.status === "completed" && s.syncMetricsId,
+  );
   const latestMetrics = latestCompleted?.syncMetricsId
     ? await getSyncMetrics(latestCompleted.id)
     : null;
 
   return (
     <>
-      <AppHeader title={patient.displayName} />
+      <AppHeader title={patient.displayName}>
+        <CreateAccountDialog dict={dict} patientId={patient.id} />
+      </AppHeader>
       <PatientSubnav patientId={patientId} dict={dict} />
       <div className="p-6 space-y-8">
         <PatientOverviewCard patient={patient} />
-        
+
         {/* Activities Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold tracking-tight">{dict.activities.title}</h2>
+            <h2 className="text-lg font-semibold tracking-tight">
+              {dict.activities.title}
+            </h2>
             <AssignActivityDialog patientId={patientId} dict={dict} />
           </div>
           {activities.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{dict.activities.noActivities}</p>
+            <p className="text-sm text-muted-foreground">
+              {dict.activities.noActivities}
+            </p>
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {activities.map((activity) => (
@@ -59,7 +71,9 @@ export default async function PatientOverviewPage({
         {latestMetrics ? (
           <SyncMetricsPanel metrics={latestMetrics} dict={dict} />
         ) : (
-          <p className="text-sm text-muted-foreground">{dict.patientOverview.noCompletedSessions}</p>
+          <p className="text-sm text-muted-foreground">
+            {dict.patientOverview.noCompletedSessions}
+          </p>
         )}
       </div>
     </>

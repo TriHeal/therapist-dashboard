@@ -15,7 +15,9 @@ export type CreateParentAccountResult =
   // `code` is only returned when the send was SIMULATED (Twilio not configured), so a real
   // activation code is never surfaced in the UI once it has actually been texted to the parent.
   | { account: ParentAccount; sent: true; code?: string }
-  | { error: "INVALID_EMAIL" | "INVALID_PHONE" | "SMS_FAILED" | "CREATE_FAILED" };
+  | {
+      error: "INVALID_EMAIL" | "INVALID_PHONE" | "SMS_FAILED" | "CREATE_FAILED";
+    };
 
 function normalizePhone(raw: string): string {
   return raw.replace(/[\s-]/g, "");
@@ -27,7 +29,7 @@ function toE164(phone: string): string {
 }
 
 export async function createParentAccount(
-  input: CreateParentAccountInput
+  input: CreateParentAccountInput,
 ): Promise<CreateParentAccountResult> {
   const email = (input.email ?? "").trim().toLowerCase();
   const phone = normalizePhone(input.phone ?? "");
@@ -60,7 +62,9 @@ export async function createParentAccount(
         return { error: "SMS_FAILED" };
       }
     } else {
-      console.log(`[mock Twilio] Would SMS activation code to ${toE164(phone)}: ${code}`);
+      console.log(
+        `[mock Twilio] Would SMS activation code to ${toE164(phone)}: ${code}`,
+      );
     }
 
     const account: ParentAccount = {
@@ -75,7 +79,9 @@ export async function createParentAccount(
 
     revalidatePath("/therapist/patients");
     // Only reveal the code when it was NOT actually texted (dev/simulated mode).
-    return SMS_CONFIGURED ? { account, sent: true } : { account, sent: true, code };
+    return SMS_CONFIGURED
+      ? { account, sent: true }
+      : { account, sent: true, code };
   } catch (err) {
     console.error("Failed to create parent account:", err);
     return { error: "CREATE_FAILED" };
