@@ -7,7 +7,7 @@ export type Locale = "he" | "en";
 export const LOCALE_COOKIE = "locale";
 
 export type Dictionary = {
-  nav: { appName: string; dashboard: string; patients: string; schedule: string; live: string; alerts: string; settings: string };
+  nav: { appName: string; dashboard: string; patients: string; schedule: string; live: string; alerts: string; settings: string; logout: string };
   common: {
     age: string;
     enrolled: string;
