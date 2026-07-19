@@ -1,17 +1,28 @@
-export type ParentAccountStatus = "invited" | "active";
+export type ParentRelationship =
+  | "mother"
+  | "father"
+  | "guardian"
+  | "other";
 
-/** A parent login account provisioned by a therapist. */
 export type ParentAccount = {
   id: string;
-  email: string;
-  phone: string;
-  childId: string;
-  status: ParentAccountStatus;
+  therapistId: string;
+  firebaseUid: string | null;
+  fullName: string;
+  email: string | null;
+  phone: string | null;
+  relationship: ParentRelationship;
+  canAccessApp: boolean;
+  patientIds: string[];
   createdAt: string;
+  updatedAt: string;
 };
 
 export type CreateParentAccountInput = {
-  email: string;
-  phone: string;
-  childId: string;
+  patientId: string;
+  fullName: string;
+  relationship: ParentRelationship;
+  email?: string | null;
+  phone?: string | null;
+  requestAppAccess: boolean;
 };

@@ -249,5 +249,33 @@
   "provisioning.errorInvalidEmail": "Please enter a valid email address.",
   "provisioning.errorInvalidPhone": "Please enter a valid mobile number.",
   "provisioning.errorSmsFailed": "Account created, but sending the SMS failed. Check your Twilio settings.",
-  "provisioning.errorGeneric": "Something went wrong. Please try again."
+  "provisioning.errorGeneric": "Something went wrong. Please try again.",
+
+  "patientOverview.childConnected": "Child app: connected",
+  "patientOverview.childNotConnected": "Child app: not connected",
+
+  "parentSection.sectionTitle": "Parents and caregivers",
+  "parentSection.emptyDescription": "Link one or more parents or caregivers so they can receive shared guidance and updates.",
+  "parentSection.addButton": "Add parent or caregiver",
+  "parentSection.linkedCountLabel": "linked",
+  "parentSection.linkedCountHelp": "Parent details are not available via the API. Backend read contract is required.",
+  "parentSection.relationshipLabels.mother": "Mother",
+  "parentSection.relationshipLabels.father": "Father",
+  "parentSection.relationshipLabels.guardian": "Guardian",
+  "parentSection.relationshipLabels.other": "Other",
+  "parentSection.accessEnabled": "App access enabled",
+  "parentSection.accessDisabled": "No app access",
+  "parentSection.accountLinked": "Account linked",
+  "parentSection.invited": "Invitation pending",
+
+  "addParent.dialogTitle": "Add parent or caregiver",
+  "addParent.dialogDescription": "This parent will be linked to {patientName}.",
+  "addParent.fields.fullName": "Full name",
+  "addParent.fields.fullNamePlaceholder": "e.g. Sarah Cohen",
+  "addParent.fields.relationship": "Relationship",
+  "addParent.fields.email": "Email",
+  "addParent.fields.emailPlaceholder": "parent@example.com",
+  "addParent.fields.phone": "Phone",
+  "addParent.fields.phonePlaceholder": "+9725...",
+  "addParent.fields.requestAppAccess": "Request app access (send invitation)"
 }

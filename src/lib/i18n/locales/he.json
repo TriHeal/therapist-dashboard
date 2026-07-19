@@ -249,5 +249,33 @@
   "provisioning.errorInvalidEmail": "נא להזין כתובת דוא\"ל תקינה.",
   "provisioning.errorInvalidPhone": "נא להזין מספר טלפון נייד תקין.",
   "provisioning.errorSmsFailed": "החשבון נוצר אך שליחת ה-SMS נכשלה. בדוק את הגדרות Twilio.",
-  "provisioning.errorGeneric": "משהו השתבש. נא לנסות שוב."
+  "provisioning.errorGeneric": "משהו השתבש. נא לנסות שוב.",
+
+  "patientOverview.childConnected": "האפליקציה של הילד/ה: מחוברת",
+  "patientOverview.childNotConnected": "האפליקציה של הילד/ה: לא מחוברת",
+
+  "parentSection.sectionTitle": "הורים ומלווים",
+  "parentSection.emptyDescription": "קשרו הורה או מלווה כדי לשתף הכוונה ועדכונים.",
+  "parentSection.addButton": "הוספת הורה או מלווה",
+  "parentSection.linkedCountLabel": "מחוברים",
+  "parentSection.linkedCountHelp": "פרטי הורה אינם זמינים דרך ה-API. יש להוסיף נקודת קריאה מתאימה בצד השרת.",
+  "parentSection.relationshipLabels.mother": "אם",
+  "parentSection.relationshipLabels.father": "אב",
+  "parentSection.relationshipLabels.guardian": "אפוטרופוס/ית",
+  "parentSection.relationshipLabels.other": "אחר",
+  "parentSection.accessEnabled": "גישה לאפליקציה פעילה",
+  "parentSection.accessDisabled": "אין גישה לאפליקציה",
+  "parentSection.accountLinked": "חשבון מקושר",
+  "parentSection.invited": "הזמנה ממתינה",
+
+  "addParent.dialogTitle": "הוספת הורה או מלווה",
+  "addParent.dialogDescription": "ההורה ייקושר ל-{patientName}.",
+  "addParent.fields.fullName": "שם מלא",
+  "addParent.fields.fullNamePlaceholder": "לדוגמה: שרה כהן",
+  "addParent.fields.relationship": "קרבה",
+  "addParent.fields.email": "דוא\"ל",
+  "addParent.fields.emailPlaceholder": "parent@example.com",
+  "addParent.fields.phone": "טלפון",
+  "addParent.fields.phonePlaceholder": "+9725...",
+  "addParent.fields.requestAppAccess": "בקשת גישה לאפליקציה (שליחת הזמנה)"
 }

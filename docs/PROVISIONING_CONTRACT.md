@@ -1,71 +1,68 @@
-# Parent Provisioning — Backend Contract
+# Parent Provisioning Contract
 
-The therapist dashboard provides a flow for creating a parent account for a specific patient.
+## Endpoint
 
-The dashboard collects:
+`POST /parent-accounts`
 
-- Parent email
-- Parent phone number
-- Patient ID
-
-When `NEXT_PUBLIC_API_BASE_URL` is configured, the dashboard calls the NestJS backend. Sensitive operations must remain in the backend:
-
-- Creating the Firebase Auth user
-- Generating activation credentials
-- Persisting the parent account
-- Linking the parent to the patient
-- Sending SMS or email invitations
-
-Frontend caller:
-
-- `src/lib/actions/provisioning.actions.ts` → `createParentAccount`
-
-Shared type:
-
-- `src/types/parent-account.ts`
-
----
-
-## `POST /parent-accounts`
-
-Create a parent account, associate it with a patient, and send the parent an activation invitation.
-
-### Request body
+## Request body
 
 ```json
 {
-  "email": "parent@example.com",
-  "phone": "0501234567",
-  "childId": "patient-id"
+  "patientId": "string",
+  "fullName": "string",
+  "relationship": "mother|father|guardian|other",
+  "email": "string|null",
+  "phone": "string|null",
+  "requestAppAccess": true
 }
+Field rules
+patientId — required
+fullName — required
+relationship — required
+email — optional
+phone — optional
+requestAppAccess — optional; represents the therapist’s request to initiate account provisioning or send an invitation
 
-email must be validated and normalized.
-phone must be validated and converted to E.164 format before sending SMS.
-childId is required and identifies the patient associated with the parent.
-Server responsibilities
-Verify that the authenticated therapist owns the patient.
-Create or locate the parent Firebase Auth user.
-Create the parent account record.
-Associate the parent account with the patient.
-Generate a secure activation credential.
-Persist the credential with an expiration time.
-Send the activation invitation through Twilio or SendGrid.
-Return the created parent account without exposing the activation credential.
-Response
+requestAppAccess is a request-only field. It is not stored on the parent record and must not be treated as canAccessApp.
+
+Backend responsibilities
+
+The backend must perform these operations atomically:
+
+Create or update the parent record.
+Add the parent ID to patient.parentIds.
+Add the patient ID to parent.patientIds.
+Initiate provisioning or invitation when requestAppAccess is true.
+
+The backend determines the resulting values of:
+
+firebaseUid
+canAccessApp
+Success response
+
+Return the created or updated parent:
+
 {
-  "id": "parent-account-id",
-  "email": "parent@example.com",
-  "phone": "0501234567",
-  "childId": "patient-id",
-  "status": "invited",
-  "createdAt": "2026-07-15T10:00:00.000Z"
+  "id": "string",
+  "therapistId": "string",
+  "firebaseUid": "string|null",
+  "fullName": "string",
+  "email": "string|null",
+  "phone": "string|null",
+  "relationship": "mother|father|guardian|other",
+  "canAccessApp": false,
+  "patientIds": ["patientId"],
+  "createdAt": "ISO timestamp",
+  "updatedAt": "ISO timestamp"
 }
 Errors
-400 — invalid email, phone, or request body
-401 — unauthenticated request
-403 or 404 — therapist does not own the selected patient
-409 — parent account already exists, when applicable
-500 — unexpected provisioning or delivery failure
 
-The child live-session code flow is handled separately through the existing backend OTP and therapy-session APIs.
-```
+For 4xx and 5xx responses, return a descriptive error body.
+
+The frontend must surface the error and must not silently fall back to mock mode.
+
+Parent read contract
+
+Until the backend exposes parent details for read operations, the frontend uses patient.parentIds.length as the linked-parent count.
+
+In API mode, it must not display an empty parent list as though no parents exist when only the detailed read endpoint is missing.

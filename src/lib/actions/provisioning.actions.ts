@@ -2,28 +2,48 @@
 
 import { revalidatePath } from "next/cache";
 import { apiFetch, USE_API } from "@/lib/api/client";
-import { parentAccounts } from "@/lib/data/mock/parent-accounts.mock";
 import { generateNumericCode } from "@/lib/crypto/codes";
+import { parentAccounts } from "@/lib/data/mock/parent-accounts.mock";
+import { patients } from "@/lib/data/mock/patients.mock";
 import { SMS_CONFIGURED, sendInviteSms } from "@/lib/sms/twilio";
-import type { CreateParentAccountInput, ParentAccount } from "@/types";
+import type {
+  CreateParentAccountInput,
+  ParentAccount,
+  ParentRelationship,
+} from "@/types";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// Israeli mobile: optional +972 or leading 0, then 5X and 7 more digits.
 const PHONE_RE = /^(?:\+972|0)5\d{8}$/;
 
+const RELATIONSHIPS: ParentRelationship[] = [
+  "mother",
+  "father",
+  "guardian",
+  "other",
+];
+
+export type CreateParentAccountError =
+  | "INVALID_NAME"
+  | "INVALID_RELATIONSHIP"
+  | "INVALID_EMAIL"
+  | "INVALID_PHONE"
+  | "PATIENT_NOT_FOUND"
+  | "SMS_FAILED"
+  | "CREATE_FAILED";
+
 export type CreateParentAccountResult =
-  // `code` is only returned when the send was SIMULATED (Twilio not configured), so a real
-  // activation code is never surfaced in the UI once it has actually been texted to the parent.
-  | { account: ParentAccount; sent: true; code?: string }
   | {
-      error: "INVALID_EMAIL" | "INVALID_PHONE" | "SMS_FAILED" | "CREATE_FAILED";
+      account: ParentAccount;
+      code?: string;
+    }
+  | {
+      error: CreateParentAccountError;
     };
 
 function normalizePhone(raw: string): string {
   return raw.replace(/[\s-]/g, "");
 }
 
-/** Convert a validated Israeli mobile (05XXXXXXXX or +9725XXXXXXXX) to E.164 for Twilio. */
 function toE164(phone: string): string {
   return phone.startsWith("+") ? phone : phone.replace(/^0/, "+972");
 }
@@ -31,59 +51,103 @@ function toE164(phone: string): string {
 export async function createParentAccount(
   input: CreateParentAccountInput,
 ): Promise<CreateParentAccountResult> {
-  const email = (input.email ?? "").trim().toLowerCase();
-  const phone = normalizePhone(input.phone ?? "");
+  const fullName = input.fullName.trim();
+  const email = input.email?.trim().toLowerCase() || null;
+  const phone = input.phone ? normalizePhone(input.phone) : null;
 
-  // Never trust the client — re-validate server-side even though the UI also guards.
-  if (!EMAIL_RE.test(email)) return { error: "INVALID_EMAIL" };
-  if (!PHONE_RE.test(phone)) return { error: "INVALID_PHONE" };
+  if (!fullName) {
+    return { error: "INVALID_NAME" };
+  }
+
+  if (!RELATIONSHIPS.includes(input.relationship)) {
+    return { error: "INVALID_RELATIONSHIP" };
+  }
+
+  if (email && !EMAIL_RE.test(email)) {
+    return { error: "INVALID_EMAIL" };
+  }
+
+  if (phone && !PHONE_RE.test(phone)) {
+    return { error: "INVALID_PHONE" };
+  }
 
   try {
     if (USE_API) {
-      // Backend (backend-heal) creates the Firebase auth user, mints the activation code,
-      // and texts it via Twilio. It returns the account WITHOUT the code.
-      const account = await apiFetch<ParentAccount>(`/parent-accounts`, {
+      const account = await apiFetch<ParentAccount>("/parent-accounts", {
         method: "POST",
-        body: { email, phone, childId: input.childId },
+        body: {
+          patientId: input.patientId,
+          fullName,
+          relationship: input.relationship,
+          email,
+          phone,
+          requestAppAccess: input.requestAppAccess,
+        },
       });
-      revalidatePath("/therapist/patients");
-      return { account, sent: true };
+
+      revalidatePath(`/therapist/patients/${input.patientId}`);
+      return { account };
     }
 
-    // No backend configured: create the account locally. If Twilio is configured, actually
-    // text the activation code; otherwise fall back to simulating the dispatch.
-    const code = generateNumericCode(6);
+    const patient = patients.find(
+      (candidate) => candidate.id === input.patientId,
+    );
 
-    if (SMS_CONFIGURED) {
-      try {
-        await sendInviteSms(toE164(phone), code);
-      } catch (err) {
-        console.error("Twilio send failed:", err);
-        return { error: "SMS_FAILED" };
+    if (!patient) {
+      return { error: "PATIENT_NOT_FOUND" };
+    }
+
+    let activationCode: string | undefined;
+
+    if (input.requestAppAccess && phone) {
+      const code = generateNumericCode(6);
+
+      if (SMS_CONFIGURED) {
+        try {
+          await sendInviteSms(toE164(phone), code);
+        } catch (error) {
+          console.error("Twilio send failed:", error);
+          return { error: "SMS_FAILED" };
+        }
+      } else {
+        console.log(
+          `[mock Twilio] Would SMS activation code to ${toE164(phone)}: ${code}`,
+        );
+        activationCode = code;
       }
-    } else {
-      console.log(
-        `[mock Twilio] Would SMS activation code to ${toE164(phone)}: ${code}`,
-      );
     }
 
+    const now = new Date().toISOString();
     const account: ParentAccount = {
       id: `pa${parentAccounts.length + 1}`,
+      therapistId: patient.primaryTherapistId,
+      firebaseUid: null,
+      fullName,
       email,
       phone,
-      childId: input.childId,
-      status: "invited",
-      createdAt: new Date().toISOString(),
+      relationship: input.relationship,
+      canAccessApp: false,
+      patientIds: [input.patientId],
+      createdAt: now,
+      updatedAt: now,
     };
+
     parentAccounts.unshift(account);
 
-    revalidatePath("/therapist/patients");
-    // Only reveal the code when it was NOT actually texted (dev/simulated mode).
-    return SMS_CONFIGURED
-      ? { account, sent: true }
-      : { account, sent: true, code };
-  } catch (err) {
-    console.error("Failed to create parent account:", err);
+    patient.parentIds ??= [];
+    if (!patient.parentIds.includes(account.id)) {
+      patient.parentIds.push(account.id);
+    }
+    patient.updatedAt = now;
+
+    revalidatePath(`/therapist/patients/${input.patientId}`);
+
+    return {
+      account,
+      code: activationCode,
+    };
+  } catch (error) {
+    console.error("Failed to create parent account:", error);
     return { error: "CREATE_FAILED" };
   }
 }

@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { AppHeader } from "@/components/layout/app-header";
 import { PatientSubnav } from "@/components/patients/patient-subnav";
 import { PatientOverviewCard } from "@/components/patients/patient-overview-card";
+import ParentsSection from "@/components/patients/parents-section";
 import { SyncMetricsPanel } from "@/components/sessions/sync-metrics-panel";
-import { getDictionary } from "@/lib/i18n/get-locale";
 import { ActivityCard } from "@/components/activities/activity-card";
 import { AssignActivityDialog } from "@/components/activities/assign-activity-dialog";
 import {
@@ -12,7 +12,7 @@ import {
   getSyncMetrics,
   getPatientActivities,
 } from "@/lib/data";
-import { CreateAccountDialog } from "@/components/accounts/create-account-dialog";
+import { getDictionary } from "@/lib/i18n/get-locale";
 
 export default async function PatientOverviewPage({
   params,
@@ -20,33 +20,43 @@ export default async function PatientOverviewPage({
   params: Promise<{ patientId: string }>;
 }) {
   const { patientId } = await params;
-  const [{ dict }, patient] = await Promise.all([
+  const [{ dict, locale }, patient] = await Promise.all([
     getDictionary(),
     getPatient(patientId),
   ]);
+
   if (!patient) notFound();
 
   const [sessions, activities] = await Promise.all([
     getPatientSessions(patientId),
     getPatientActivities(patientId),
   ]);
+
   const latestCompleted = sessions.find(
-    (s) => s.status === "completed" && s.syncMetricsId,
+    (session) => session.status === "completed" && session.syncMetricsId,
   );
+
   const latestMetrics = latestCompleted?.syncMetricsId
     ? await getSyncMetrics(latestCompleted.id)
     : null;
 
   return (
     <>
-      <AppHeader title={patient.displayName}>
-        <CreateAccountDialog dict={dict} patientId={patient.id} />
-      </AppHeader>
-      <PatientSubnav patientId={patientId} dict={dict} />
-      <div className="p-6 space-y-8">
-        <PatientOverviewCard patient={patient} />
+      <AppHeader title={patient.displayName} />
 
-        {/* Activities Section */}
+      <PatientSubnav patientId={patientId} dict={dict} />
+
+      <div className="space-y-8 p-6">
+        <PatientOverviewCard patient={patient} dict={dict} locale={locale} />
+
+        <ParentsSection
+          patientId={patientId}
+          patientName={patient.displayName}
+          parentIds={patient.parentIds}
+          dict={dict}
+          locale={locale}
+        />
+
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold tracking-tight">
@@ -54,6 +64,7 @@ export default async function PatientOverviewPage({
             </h2>
             <AssignActivityDialog patientId={patientId} dict={dict} />
           </div>
+
           {activities.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               {dict.activities.noActivities}
@@ -67,7 +78,6 @@ export default async function PatientOverviewPage({
           )}
         </div>
 
-        {/* Sync Metrics Section */}
         {latestMetrics ? (
           <SyncMetricsPanel metrics={latestMetrics} dict={dict} />
         ) : (

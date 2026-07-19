@@ -66,6 +66,39 @@ export type Dictionary = {
     noCompletedSessions: string;
     missionsTitle: string;
     noActiveActivities: string;
+    childConnected?: string;
+    childNotConnected?: string;
+  };
+  parentSection: {
+    sectionTitle: string;
+    emptyDescription: string;
+    addButton: string;
+    linkedCountLabel: string;
+    linkedCountHelp: string;
+    relationshipLabels: {
+      mother: string;
+      father: string;
+      guardian: string;
+      other: string;
+    };
+    accessEnabled: string;
+    accessDisabled: string;
+    accountLinked: string;
+    invited: string;
+  };
+  addParent: {
+    dialogTitle: string;
+    dialogDescription: string;
+    fields: {
+      fullName: string;
+      fullNamePlaceholder?: string;
+      relationship: string;
+      email: string;
+      emailPlaceholder?: string;
+      phone: string;
+      phonePlaceholder?: string;
+      requestAppAccess: string;
+    };
   };
   sessionsPage: { noSessions: string };
   syncMetrics: {
