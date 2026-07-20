@@ -7,7 +7,8 @@ import type { Session } from "@/types";
 
 export async function createTherapySession(
   patientId: string,
-  activityTypes: string[]
+  activityTypes: string[],
+  notes?: string
 ): Promise<Session | { error: string }> {
   try {
     let newSession: Session;
@@ -17,6 +18,7 @@ export async function createTherapySession(
         method: "POST",
         body: {
           patientId,
+          notes,
           activities: activityTypes.map((type, index) => ({
             type,
             order: index + 1,
@@ -32,6 +34,7 @@ export async function createTherapySession(
         startedAt: new Date().toISOString(),
         ediEventIds: [],
         triggerKeywordIds: [],
+        notes,
         activities: activityTypes.map((type, index) => ({
           type,
           order: index + 1,
@@ -47,6 +50,36 @@ export async function createTherapySession(
   } catch (err: unknown) {
     console.error("Failed to create therapy session:", err);
     const msg = err instanceof Error ? err.message : "Failed to create therapy session";
+    return { error: msg };
+  }
+}
+
+export async function endTherapySession(
+  sessionId: string,
+  patientId: string,
+  notes?: string
+): Promise<{ success: boolean } | { error: string }> {
+  try {
+    if (USE_API) {
+      await apiFetch(`/therapy-sessions/${sessionId}/end`, {
+        method: "POST",
+      });
+    } else {
+      const session = sessions.find((s) => s.id === sessionId);
+      if (!session) {
+        return { error: "Session not found" };
+      }
+      session.status = "completed";
+      session.notes = notes;
+      session.endedAt = new Date().toISOString();
+    }
+
+    revalidatePath(`/therapist/patients/${patientId}/sessions`);
+    revalidatePath(`/therapist/patients/${patientId}/live`);
+    return { success: true };
+  } catch (err: unknown) {
+    console.error("Failed to end therapy session:", err);
+    const msg = err instanceof Error ? err.message : "Failed to end therapy session";
     return { error: msg };
   }
 }

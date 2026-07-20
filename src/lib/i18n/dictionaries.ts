@@ -77,27 +77,27 @@ export type Dictionary = {
     activities: string;
   };
   sessionsTable: {
-  id: string;
-  date: string;
-  type: string;
-  status: string;
-  activities: string;
-  notes: string;
-  newSession: string;
-  noSessions: string;
+    id: string;
+    date: string;
+    type: string;
+    status: string;
+    activities: string;
+    notes: string;
+    newSession: string;
+    noSessions: string;
   };
   newSessionDialog: {
-  title: string;
-  description: string;
-  date: string;
-  notes: string;
-  selectActivities: string;
-  submit: string;
-  breathing: string;
-  event_processing: string;
-  memory_lake: string;
-  bonding_forest: string;
-  leaf_on_water: string;
+    title: string;
+    description: string;
+    date: string;
+    notes: string;
+    selectActivities: string;
+    submit: string;
+    breathing: string;
+    event_processing: string;
+    memory_lake: string;
+    bonding_forest: string;
+    leaf_on_water: string;
   };
   patientOverview: {
     noCompletedSessions: string;
@@ -245,6 +245,9 @@ export type Dictionary = {
     resetStepper: string;
     stepperComplete: string;
     boatProgress: string;
+    endSession: string;
+    endSessionDesc: string;
+    endSessionSubmit: string;
   };
   settingsPage: {
     title: string;

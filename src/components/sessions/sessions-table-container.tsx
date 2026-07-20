@@ -1,6 +1,5 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -10,12 +9,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import type { Dictionary, Locale } from "@/lib/i18n/dictionaries";
 import type { Session } from "@/types";
+import { CreateSessionDialog } from "./create-session-dialog";
+import { EndSessionButton } from "./end-session-button";
 
 export function SessionsTableContainer({
   sessions,
+  patientId,
   dict,
   locale,
 }: {
@@ -25,6 +26,7 @@ export function SessionsTableContainer({
   locale: Locale;
 }) {
   const dateLocale = locale === "he" ? "he-IL" : "en-US";
+  const activeSession = sessions.find((s) => s.status === "in_progress");
 
   // Helper to translate activity types safely
   const getActivityName = (type: string) => {
@@ -37,11 +39,20 @@ export function SessionsTableContainer({
         <h2 className="text-2xl font-bold tracking-tight">
           {dict.patientSubnav.sessions}
         </h2>
-        <Button onClick={() => alert("New Session Dialog modal placeholder (PR 3)")}>
-          <Plus className="h-4 w-4 mr-2 rtl:ml-2 rtl:mr-0" />
-          {dict.sessionsTable.newSession}
-        </Button>
+        {!activeSession && (
+          <CreateSessionDialog patientId={patientId} dict={dict} />
+        )}
       </div>
+
+      {activeSession && (
+        <div className="max-w-xl">
+          <EndSessionButton
+            sessionId={activeSession.id}
+            patientId={patientId}
+            dict={dict}
+          />
+        </div>
+      )}
 
       {sessions.length === 0 ? (
         <div className="rounded-lg border border-dashed p-8 text-center">
@@ -63,9 +74,11 @@ export function SessionsTableContainer({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sessions.map((session) => (
+              {sessions.map((session, index) => (
                 <TableRow key={session.id}>
-                  <TableCell className="font-mono text-xs">{session.id}</TableCell>
+                  <TableCell className="font-medium text-xs">
+                    #{sessions.length - index}
+                  </TableCell>
                   <TableCell>
                     {new Date(session.startedAt).toLocaleString(dateLocale, {
                       dateStyle: "medium",

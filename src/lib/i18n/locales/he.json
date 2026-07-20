@@ -189,6 +189,9 @@
   "liveDetail.resetStepper": "איפוס שלבים",
   "liveDetail.stepperComplete": "מחזור ה-EDI הושלם. הסירה ממשיכה בנהר.",
   "liveDetail.boatProgress": "התקדמות הסירה בנהר",
+  "liveDetail.endSession": "סיום מפגש",
+  "liveDetail.endSessionDesc": "אפשר להוסיף הערות קליניות ולסיים את המפגש הפעיל.",
+  "liveDetail.endSessionSubmit": "סיום מפגש",
 
   "settingsPage.title": "הגדרות",
   "settingsPage.description": "הגדרת חשיפת כרטיסי הכוונה משותפים להורה לכל מטופל",

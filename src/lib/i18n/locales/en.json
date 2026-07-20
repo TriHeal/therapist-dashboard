@@ -189,6 +189,9 @@
   "liveDetail.resetStepper": "Reset stepper",
   "liveDetail.stepperComplete": "EDI cycle complete. The boat continues down the river.",
   "liveDetail.boatProgress": "Boat progress down the river",
+  "liveDetail.endSession": "End Session",
+  "liveDetail.endSessionDesc": "Add optional clinical notes and end the active session.",
+  "liveDetail.endSessionSubmit": "End Session",
 
   "settingsPage.title": "Settings",
   "settingsPage.description": "Configure parent-shared guidance card visibility per patient",
