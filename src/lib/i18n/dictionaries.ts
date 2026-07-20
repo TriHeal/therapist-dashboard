@@ -71,6 +71,7 @@ export type Dictionary = {
   };
   patientSubnav: {
     overview: string;
+    sessions: string;
     timeline: string;
     progress: string;
     activities: string;
