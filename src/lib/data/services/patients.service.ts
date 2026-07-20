@@ -16,11 +16,16 @@ function mapBackendPatient(bp: any): Patient {
     id: bp.id,
     displayName: bp.displayName,
     age: bp.age,
-    avatarUrl: bp.avatarUrl || undefined,
-    status: bp.status,
+    sex: bp.sex ?? "unspecified",
+    avatarUrl: bp.avatarUrl ?? null,
+    status: bp.status ?? "active",
     primaryTherapistId: bp.therapistId,
     enrolledAt: parseBackendDate(bp.createdAt),
-    parentSharingEnabled: true, // Default to true
+    parentSharingEnabled: bp.parentSharingEnabled ?? false,
+    parentIds: bp.parentIds ?? [],
+    childUid: bp.childUid ?? null,
+    createdAt: parseBackendDate(bp.createdAt),
+    updatedAt: parseBackendDate(bp.updatedAt),
   };
 }
 

@@ -4,6 +4,7 @@ export * from "./sync-metrics";
 export * from "./edi-stepper";
 export * from "./trigger-keyword";
 export * from "./parent-reflection";
+export * from "./parent-account";
 export * from "./live";
 export * from "./activity";
 export * from "./parent-audit";

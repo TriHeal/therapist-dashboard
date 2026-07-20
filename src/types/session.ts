@@ -15,4 +15,5 @@ export type Session = {
   triggerKeywordIds: string[];
   parentReflectionId?: string;
   notes?: string;
+  activities?: { type: string; order: number; status: string }[];
 };
