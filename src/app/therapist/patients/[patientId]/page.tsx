@@ -12,6 +12,7 @@ import {
   getSyncMetrics,
   getPatientActivities,
 } from "@/lib/data";
+import { getParentAccounts } from "@/lib/actions/provisioning.actions";
 import { getDictionary } from "@/lib/i18n/get-locale";
 
 export default async function PatientOverviewPage({
@@ -27,9 +28,10 @@ export default async function PatientOverviewPage({
 
   if (!patient) notFound();
 
-  const [sessions, activities] = await Promise.all([
+  const [sessions, activities, parentAccounts] = await Promise.all([
     getPatientSessions(patientId),
     getPatientActivities(patientId),
+    getParentAccounts(patientId),
   ]);
 
   const latestCompleted = sessions.find(
@@ -53,6 +55,7 @@ export default async function PatientOverviewPage({
           patientId={patientId}
           patientName={patient.displayName}
           parentIds={patient.parentIds}
+          parentsList={parentAccounts}
           dict={dict}
           locale={locale}
         />
