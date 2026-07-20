@@ -76,6 +76,29 @@ export type Dictionary = {
     progress: string;
     activities: string;
   };
+  sessionsTable: {
+  id: string;
+  date: string;
+  type: string;
+  status: string;
+  activities: string;
+  notes: string;
+  newSession: string;
+  noSessions: string;
+  };
+  newSessionDialog: {
+  title: string;
+  description: string;
+  date: string;
+  notes: string;
+  selectActivities: string;
+  submit: string;
+  breathing: string;
+  event_processing: string;
+  memory_lake: string;
+  bonding_forest: string;
+  leaf_on_water: string;
+  };
   patientOverview: {
     noCompletedSessions: string;
     missionsTitle: string;

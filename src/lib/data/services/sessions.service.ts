@@ -11,6 +11,7 @@ function parseBackendDate(val: any): string {
   return new Date(val).toISOString();
 }
 
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 function mapBackendSession(s: any): Session {
   return {
     id: s.id,
@@ -18,9 +19,16 @@ function mapBackendSession(s: any): Session {
     type: "clinic", // Default type since backend doesn't have it
     status: s.status === "active" ? "in_progress" : "completed",
     startedAt: parseBackendDate(s.createdAt),
-    endedAt: s.status === "ended" ? parseBackendDate(s.updatedAt) : undefined,
+    endedAt: (s.status === "ended" || s.status === "completed") ? parseBackendDate(s.updatedAt || s.endedAt) : undefined,
     ediEventIds: [],
     triggerKeywordIds: [],
+    notes: s.notes,
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    activities: s.activities ? s.activities.map((act: any) => ({
+      type: act.type,
+      order: Number(act.order),
+      status: act.status
+    })) : undefined
   };
 }
 
