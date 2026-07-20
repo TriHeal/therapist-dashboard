@@ -37,6 +37,7 @@ export type Dictionary = {
     cancel: string;
     save: string;
     close: string;
+    edit: string;
   };
   patientStatus: Record<PatientStatus, string>;
   sessionStatus: Record<SessionStatus, string>;
@@ -55,6 +56,18 @@ export type Dictionary = {
     status: string;
     lastSession: string;
     parentSharing: string;
+  };
+  patientForm: {
+    dialogDescription: string;
+    fullName: string;
+    fullNamePlaceholder: string;
+    age: string;
+    agePlaceholder: string;
+    sex: string;
+    sexMale: string;
+    sexFemale: string;
+    sexUnspecified: string;
+    parentSharingEnabled: string;
   };
   patientSubnav: {
     overview: string;

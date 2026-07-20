@@ -19,6 +19,7 @@
   "common.cancel": "ביטול",
   "common.save": "שמירה",
   "common.close": "סגירה",
+  "common.edit": "עריכה",
 
   "patientStatus.active": "פעיל",
   "patientStatus.paused": "בהפסקה",
@@ -48,6 +49,17 @@
   "patientTable.status": "סטטוס",
   "patientTable.lastSession": "מפגש אחרון",
   "patientTable.parentSharing": "שיתוף הורה",
+
+  "patientForm.dialogDescription": "הזן את פרטי המטופל החדש.",
+  "patientForm.fullName": "שם מלא",
+  "patientForm.fullNamePlaceholder": "לדוגמה: דניאל",
+  "patientForm.age": "גיל",
+  "patientForm.agePlaceholder": "לדוגמה: 8",
+  "patientForm.sex": "מין",
+  "patientForm.sexMale": "בן",
+  "patientForm.sexFemale": "בת",
+  "patientForm.sexUnspecified": "לא צוין",
+  "patientForm.parentSharingEnabled": "אפשר שיתוף עם ההורים",
 
   "patientSubnav.overview": "סקירה",
   "patientSubnav.timeline": "ציר זמן",

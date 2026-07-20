@@ -1,18 +1,19 @@
 export type PatientStatus = "active" | "paused" | "completed";
+export type PatientSex = "male" | "female" | "unspecified";
 
 export type Patient = {
   id: string;
   displayName: string;
   age: number;
-  avatarUrl?: string;
+  sex: PatientSex;
+  avatarUrl?: string | null;
   status: PatientStatus;
-  primaryTherapistId: string; // existing field used throughout the app
+  primaryTherapistId: string;
   enrolledAt: string;
   lastSessionAt?: string;
   parentSharingEnabled: boolean;
-  // New fields for parent provisioning and child app linking
-  parentIds?: string[]; // list of linked ParentAccount ids
-  childUid?: string | null; // linked child app Firebase UID, or null if not connected
+  parentIds: string[];
+  childUid: string | null;
   createdAt?: string;
   updatedAt?: string;
 };

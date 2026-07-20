@@ -19,6 +19,7 @@
   "common.cancel": "Cancel",
   "common.save": "Save",
   "common.close": "Close",
+  "common.edit": "Edit",
 
   "patientStatus.active": "Active",
   "patientStatus.paused": "Paused",
@@ -48,6 +49,17 @@
   "patientTable.status": "Status",
   "patientTable.lastSession": "Last Session",
   "patientTable.parentSharing": "Parent Sharing",
+
+  "patientForm.dialogDescription": "Enter the new patient's details.",
+  "patientForm.fullName": "Full name",
+  "patientForm.fullNamePlaceholder": "For example: Daniel",
+  "patientForm.age": "Age",
+  "patientForm.agePlaceholder": "For example: 8",
+  "patientForm.sex": "Sex",
+  "patientForm.sexMale": "Boy",
+  "patientForm.sexFemale": "Girl",
+  "patientForm.sexUnspecified": "Not specified",
+  "patientForm.parentSharingEnabled": "Enable sharing with parents",
 
   "patientSubnav.overview": "Overview",
   "patientSubnav.timeline": "Activity Timeline",
