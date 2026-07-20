@@ -7,8 +7,7 @@ import type { Session } from "@/types";
 
 export async function createTherapySession(
   patientId: string,
-  activityTypes: string[],
-  notes?: string
+  activityTypes: string[]
 ): Promise<Session | { error: string }> {
   try {
     let newSession: Session;
@@ -18,7 +17,6 @@ export async function createTherapySession(
         method: "POST",
         body: {
           patientId,
-          notes,
           activities: activityTypes.map((type, index) => ({
             type,
             order: index + 1,
@@ -34,7 +32,6 @@ export async function createTherapySession(
         startedAt: new Date().toISOString(),
         ediEventIds: [],
         triggerKeywordIds: [],
-        notes,
         activities: activityTypes.map((type, index) => ({
           type,
           order: index + 1,

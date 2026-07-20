@@ -1,5 +1,6 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -9,13 +10,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { Dictionary, Locale } from "@/lib/i18n/dictionaries";
 import type { Session } from "@/types";
-import { CreateSessionDialog } from "./create-session-dialog";
 
 export function SessionsTableContainer({
   sessions,
-  patientId,
   dict,
   locale,
 }: {
@@ -37,7 +37,10 @@ export function SessionsTableContainer({
         <h2 className="text-2xl font-bold tracking-tight">
           {dict.patientSubnav.sessions}
         </h2>
-        <CreateSessionDialog patientId={patientId} dict={dict} />
+        <Button onClick={() => alert("New Session Dialog modal placeholder (PR 3)")}>
+          <Plus className="h-4 w-4 mr-2 rtl:ml-2 rtl:mr-0" />
+          {dict.sessionsTable.newSession}
+        </Button>
       </div>
 
       {sessions.length === 0 ? (
