@@ -2,6 +2,7 @@ import type { Session } from "@/types/auth";
 import { Role } from "@/types/auth";
 
 export const SESSION_COOKIE = "session";
+export const PARENT_DEMO_SESSION_COOKIE = "parent_demo_session";
 
 function isRole(value: unknown): value is Role {
   return value === Role.Therapist || value === Role.Parent || value === Role.Child;

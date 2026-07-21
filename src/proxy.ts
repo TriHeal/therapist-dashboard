@@ -1,9 +1,25 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { decodeSession, SESSION_COOKIE } from "@/lib/auth/session";
+import {
+  decodeSession,
+  PARENT_DEMO_SESSION_COOKIE,
+  SESSION_COOKIE,
+} from "@/lib/auth/session";
 import { Role } from "@/types/auth";
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (pathname === "/parent/activate") {
+    return NextResponse.next();
+  }
+
+  const hasParentDemoSession = Boolean(
+    request.cookies.get(PARENT_DEMO_SESSION_COOKIE)?.value,
+  );
+
+  if (pathname.startsWith("/parent") && hasParentDemoSession) {
+    return NextResponse.next();
+  }
 
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   const session = token ? decodeSession(token) : null;
