@@ -1,16 +1,16 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { decodeSession, SESSION_COOKIE } from "@/lib/auth/session";
+import { ROLE_COOKIE, SESSION_COOKIE, isRole } from "@/lib/auth/session";
 import { Role } from "@/types/auth";
 
 export default async function RootPage() {
   const store = await cookies();
   const token = store.get(SESSION_COOKIE)?.value;
-  const session = token ? decodeSession(token) : null;
+  const role = store.get(ROLE_COOKIE)?.value;
 
-  if (!session) {
+  if (!token || !isRole(role)) {
     redirect("/login");
   }
 
-  redirect(session.role === Role.Parent ? "/parent" : "/therapist/patients");
+  redirect(role === Role.Parent ? "/parent" : "/therapist/patients");
 }

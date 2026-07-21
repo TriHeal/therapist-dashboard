@@ -1,26 +1,31 @@
-import type { Session } from "@/types/auth";
 import { Role } from "@/types/auth";
 
 export const SESSION_COOKIE = "session";
+export const ROLE_COOKIE = "role";
 
-function isRole(value: unknown): value is Role {
+export function isRole(value: unknown): value is Role {
   return value === Role.Therapist || value === Role.Parent || value === Role.Child;
 }
 
 /**
- * Decodes the role/uid claims out of a Firebase ID token without verifying
- * its signature. Signature verification happens server-side in backend-heal
- * (FirebaseAuthGuard); this decode is only used for client-side route
- * gating (proxy.ts), not for authorizing API calls.
+ * Extracts the Firebase uid from an ID token payload without verifying its
+ * signature (the backend's FirebaseAuthGuard does the real verification).
+ *
+ * NOTE: the user's ROLE is intentionally NOT read from the token. backend-heal
+ * does not set a role custom claim — it returns the role in the /auth/login
+ * response, which we persist in a separate `role` cookie (see /api/session).
+ * So token decoding here only needs the uid.
+ *
+ * Uses Buffer, so it must run in the Node runtime (the /api/session route) —
+ * it is never called from the Edge proxy.
  */
-export function decodeSession(idToken: string): Session | null {
+export function getTokenUid(idToken: string): string | null {
   try {
     const [, payload] = idToken.split(".");
     if (!payload) return null;
     const json = JSON.parse(Buffer.from(payload, "base64").toString("utf8"));
-    if (typeof json.user_id !== "string" && typeof json.sub !== "string") return null;
-    if (!isRole(json.role)) return null;
-    return { uid: json.user_id ?? json.sub, role: json.role };
+    const uid = json.user_id ?? json.sub;
+    return typeof uid === "string" ? uid : null;
   } catch {
     return null;
   }
