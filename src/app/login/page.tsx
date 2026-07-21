@@ -81,16 +81,14 @@ export default function LoginPage() {
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "מתחבר..." : "התחברות"}
             </Button>
-            {process.env.NODE_ENV !== "production" && (
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={() => router.push("/parent")}
-              >
-                מעבר למסך הורה (זמני, ללא התחברות)
-              </Button>
-            )}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => router.push("/parent")}
+            >
+              מעבר למסך הורה (זמני, ללא התחברות)
+            </Button>
           </CardFooter>
         </form>
 
