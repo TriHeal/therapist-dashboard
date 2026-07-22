@@ -256,6 +256,24 @@ export type Dictionary = {
     endSession: string;
     endSessionDesc: string;
     endSessionSubmit: string;
+    childConnectionTitle: string;
+    childConnectionDescription: string;
+    getChildCode: string;
+    connectionCode: string;
+    codeExpiresAt: string;
+    copyCode: string;
+    codeCopied: string;
+    generateNewCode: string;
+    generatingCode: string;
+    childConnectionErrorTitle: string;
+    noActiveSessionTitle: string;
+    noActiveSessionDescription: string;
+    plannedActivities: string;
+    noPlannedActivities: string;
+    sessionStatus: string;
+    activityPending: string;
+    activityActive: string;
+    activityCompleted: string;
   };
   settingsPage: {
     title: string;
