@@ -6,10 +6,16 @@ import {
 } from "@/lib/auth/session";
 import { Role } from "@/types/auth";
 
+const PUBLIC_PARENT_ROUTES = new Set([
+  "/parent/activate",
+  "/parent/set-password",
+  "/parent/login",
+]);
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/parent/activate") {
+  if (PUBLIC_PARENT_ROUTES.has(pathname)) {
     return NextResponse.next();
   }
 
@@ -24,12 +30,16 @@ export function proxy(request: NextRequest) {
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   const session = token ? decodeSession(token) : null;
 
-  if (!session) {
-    const loginUrl = new URL("/login", request.url);
-    return NextResponse.redirect(loginUrl);
+  if (pathname === "/" && hasParentDemoSession && !session) {
+    return NextResponse.redirect(new URL("/parent", request.url));
   }
 
-  const home = session.role === Role.Parent ? "/parent" : "/therapist/patients";
+  if (!session) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  const home =
+    session.role === Role.Parent ? "/parent" : "/therapist/patients";
 
   if (pathname.startsWith("/parent") && session.role !== Role.Parent) {
     return NextResponse.redirect(new URL(home, request.url));

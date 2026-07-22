@@ -15,9 +15,7 @@ import {
 } from "@/components/ui/card";
 import { login } from "@/lib/auth/login";
 
-const DEV_USERS = [
-  { label: "מטפל/ת", id: "123456789", password: "test1234!" },
-];
+const DEV_USERS = [{ label: "מטפל/ת", id: "123456789", password: "test1234!" }];
 
 export default function LoginPage() {
   const router = useRouter();
@@ -80,6 +78,14 @@ export default function LoginPage() {
           <CardFooter className="flex flex-col gap-2">
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "מתחבר..." : "התחברות"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => router.push("/parent/login")}
+            >
+              כניסת הורים / Parent login
             </Button>
             {process.env.NODE_ENV !== "production" && (
               <Button

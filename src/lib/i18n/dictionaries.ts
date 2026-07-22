@@ -297,9 +297,35 @@ export type Dictionary = {
     description: string;
     childCard: string;
     activeActivitiesTitle: string;
+    viewActivities: string;
     noActiveActivities: string;
     recentReflectionsTitle: string;
     noReflections: string;
+  };
+  parentAuth: {
+    activateTitle: string;
+    activateDescription: string;
+    activationCode: string;
+    activationSubmit: string;
+    activating: string;
+    activationFailed: string;
+    setPasswordTitle: string;
+    setPasswordDescription: string;
+    loginTitle: string;
+    loginDescription: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    submit: string;
+    loginSubmit: string;
+    loggingIn: string;
+    invalidEmail: string;
+    passwordTooShort: string;
+    passwordsMustMatch: string;
+    invalidCredentials: string;
+    noProfileFound: string;
+    savePasswordError: string;
+    saving: string;
   };
   parentActivitiesPage: {
     title: string;
