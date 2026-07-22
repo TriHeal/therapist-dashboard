@@ -15,7 +15,13 @@ export function ParentLayoutShell({
 }) {
   const pathname = usePathname();
 
-  if (pathname === "/parent/activate") {
+  const hideSidebarRoutes = [
+    "/parent/activate",
+    "/parent/login",
+    "/parent/set-password",
+  ];
+
+  if (hideSidebarRoutes.includes(pathname)) {
     return <>{children}</>;
   }
 

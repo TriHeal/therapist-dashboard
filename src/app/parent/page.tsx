@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
+import { ParentLogoutButton } from "@/components/parent/parent-logout-button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -27,10 +28,12 @@ export default async function ParentHomePage() {
       <AppHeader
         title={dict.parentHome.title}
         description={dict.parentHome.description}
-      />
-      <div className="p-6 space-y-6">
+      >
+        <ParentLogoutButton dict={dict} />
+      </AppHeader>
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-4 sm:px-6 sm:py-6">
         {child && (
-          <Card size="sm">
+          <Card size="sm" className="w-full">
             <CardHeader>
               <CardTitle>{dict.parentHome.childCard}</CardTitle>
             </CardHeader>
@@ -42,7 +45,7 @@ export default async function ParentHomePage() {
           </Card>
         )}
 
-        <Card size="sm">
+        <Card size="sm" className="w-full">
           <CardHeader className="flex items-center justify-between gap-4">
             <CardTitle>{dict.parentHome.activeActivitiesTitle}</CardTitle>
             <Link
@@ -75,7 +78,7 @@ export default async function ParentHomePage() {
           </CardContent>
         </Card>
 
-        <Card size="sm">
+        <Card size="sm" className="w-full">
           <CardHeader>
             <CardTitle>{dict.parentHome.recentReflectionsTitle}</CardTitle>
           </CardHeader>
