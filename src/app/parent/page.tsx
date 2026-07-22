@@ -1,11 +1,18 @@
+import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
+import { ParentLogoutButton } from "@/components/parent/parent-logout-button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { getMyChild, getMyChildActivities, getMyChildReflections } from "@/lib/data";
+import {
+  getMyChild,
+  getMyChildActivities,
+  getMyChildReflections,
+} from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-locale";
 
 export default async function ParentHomePage() {
-  const [{ dict }, child, activities, reflections] = await Promise.all([
+  const [{ dict, locale }, child, activities, reflections] = await Promise.all([
     getDictionary(),
     getMyChild(),
     getMyChildActivities(),
@@ -13,13 +20,20 @@ export default async function ParentHomePage() {
   ]);
 
   const activeActivities = activities.filter((m) => m.status === "active");
+  const latestActivity = activeActivities[0];
+  const latestReflection = reflections[0];
 
   return (
     <>
-      <AppHeader title={dict.parentHome.title} description={dict.parentHome.description} />
-      <div className="p-6 space-y-6">
+      <AppHeader
+        title={dict.parentHome.title}
+        description={dict.parentHome.description}
+      >
+        <ParentLogoutButton dict={dict} />
+      </AppHeader>
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-4 sm:px-6 sm:py-6">
         {child && (
-          <Card size="sm">
+          <Card size="sm" className="w-full">
             <CardHeader>
               <CardTitle>{dict.parentHome.childCard}</CardTitle>
             </CardHeader>
@@ -31,49 +45,65 @@ export default async function ParentHomePage() {
           </Card>
         )}
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Card size="sm">
-            <CardHeader>
-              <CardTitle>{dict.parentHome.activeActivitiesTitle}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {activeActivities.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  {dict.parentHome.noActiveActivities}
+        <Card size="sm" className="w-full">
+          <CardHeader className="flex items-center justify-between gap-4">
+            <CardTitle>{dict.parentHome.activeActivitiesTitle}</CardTitle>
+            <Link
+              href="/parent/activities"
+              className={buttonVariants({ variant: "outline", size: "sm" })}
+            >
+              {dict.parentHome.viewActivities}
+            </Link>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {!latestActivity ? (
+              <p className="text-sm text-muted-foreground">
+                {dict.parentHome.noActiveActivities}
+              </p>
+            ) : (
+              <div className="space-y-1">
+                <p className="text-sm font-medium">{latestActivity.title}</p>
+                <Progress
+                  value={
+                    (latestActivity.completedCount /
+                      latestActivity.targetCount) *
+                    100
+                  }
+                />
+                <p className="text-xs text-muted-foreground">
+                  {latestActivity.completedCount}/{latestActivity.targetCount}
                 </p>
-              ) : (
-                activeActivities.map((activity) => (
-                  <div key={activity.id} className="space-y-1">
-                    <p className="text-sm font-medium">{activity.title}</p>
-                    <Progress
-                      value={(activity.completedCount / activity.targetCount) * 100}
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      {activity.completedCount}/{activity.targetCount}
-                    </p>
-                  </div>
-                ))
-              )}
-            </CardContent>
-          </Card>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
-          <Card size="sm">
-            <CardHeader>
-              <CardTitle>{dict.parentHome.recentReflectionsTitle}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {reflections.length === 0 ? (
-                <p className="text-sm text-muted-foreground">{dict.parentHome.noReflections}</p>
-              ) : (
-                reflections.slice(0, 3).map((r) => (
-                  <p key={r.id} className="text-sm text-muted-foreground line-clamp-2">
-                    {r.whatHappened}
+        <Card size="sm" className="w-full">
+          <CardHeader>
+            <CardTitle>{dict.parentHome.recentReflectionsTitle}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {!latestReflection ? (
+              <p className="text-sm text-muted-foreground">
+                {dict.parentHome.noReflections}
+              </p>
+            ) : (
+              <div className="space-y-2">
+                <p className="text-xs text-muted-foreground">
+                  {new Date(latestReflection.loggedAt).toLocaleDateString(
+                    locale,
+                  )}
+                </p>
+                <p className="text-sm">{latestReflection.whatHappened}</p>
+                {latestReflection.parentNotes ? (
+                  <p className="text-sm text-muted-foreground">
+                    {latestReflection.parentNotes}
                   </p>
-                ))
-              )}
-            </CardContent>
-          </Card>
-        </div>
+                ) : null}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </>
   );

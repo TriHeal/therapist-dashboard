@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CreateAccountDialog } from "@/components/accounts/create-account-dialog";
+import { EditAccountDialog } from "@/components/accounts/edit-account-dialog";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { ParentAccount } from "@/types/parent-account";
 import { USE_API } from "@/lib/api/client";
@@ -16,16 +17,24 @@ export default function ParentsSection({
   patientId,
   patientName,
   parentIds = [],
+  parentsList,
   dict,
   locale,
 }: {
   patientId: string;
   patientName: string;
   parentIds?: string[];
+  parentsList?: ParentAccount[];
   dict: Dictionary;
   locale: "he" | "en";
 }) {
-  const count = parentIds.length;
+  const displayParents =
+    parentsList ||
+    (USE_API
+      ? []
+      : mockParents.filter((parent) => parent.patientIds.includes(patientId)));
+
+  const count = displayParents.length || parentIds.length;
 
   return (
     <section
@@ -45,7 +54,7 @@ export default function ParentsSection({
       </div>
 
       <div className="mt-4">
-        {count === 0 ? (
+        {displayParents.length === 0 ? (
           <Card className="p-4">
             <p className="text-sm text-muted-foreground">
               {dict.parentSection.emptyDescription}
@@ -54,63 +63,58 @@ export default function ParentsSection({
         ) : (
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">
-              {count} {dict.parentSection.linkedCountLabel}
+              {displayParents.length} {dict.parentSection.linkedCountLabel}
             </p>
 
-            {USE_API ? (
-              <Card className="p-4">
-                <p className="text-sm text-muted-foreground">
-                  {dict.parentSection.linkedCountHelp}
-                </p>
-              </Card>
-            ) : (
-              mockParents
-                .filter((parent) =>
-                  parent.patientIds.includes(patientId),
-                )
-                .map((parent) => (
-                  <Card key={parent.id} className="p-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="font-medium">{parent.fullName}</p>
-
-                        <p className="text-sm text-muted-foreground">
-                          {
-                            dict.parentSection.relationshipLabels[
-                              parent.relationship
-                            ]
-                          }
-                        </p>
-
-                        {(parent.email || parent.phone) && (
-                          <p
-                            className="mt-1 text-sm text-muted-foreground"
-                            dir="ltr"
-                          >
-                            {[parent.email, parent.phone]
-                              .filter(Boolean)
-                              .join(" · ")}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="text-end text-sm">
-                        <p>
-                          {parent.canAccessApp
-                            ? dict.parentSection.accessEnabled
-                            : dict.parentSection.accessDisabled}
-                        </p>
-
-                        <p className="text-muted-foreground">
-                          {parent.firebaseUid
-                            ? dict.parentSection.accountLinked
-                            : dict.parentSection.invited}
-                        </p>
-                      </div>
+            {displayParents.map((parent) => (
+              <Card key={parent.id} className="p-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{parent.fullName}</p>
+                      <EditAccountDialog
+                        dict={dict}
+                        parent={parent}
+                        patientId={patientId}
+                      />
                     </div>
-                  </Card>
-                ))
-            )}
+
+                    <p className="text-sm text-muted-foreground">
+                      {
+                        dict.parentSection.relationshipLabels[
+                          parent.relationship
+                        ] || parent.relationship
+                      }
+                    </p>
+
+                    {(parent.email || parent.phone) && (
+                      <p
+                        className="mt-1 text-sm text-muted-foreground"
+                        dir="ltr"
+                      >
+                        {[parent.email, parent.phone]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="text-end text-sm">
+                    <p>
+                      {parent.canAccessApp
+                        ? dict.parentSection.accessEnabled
+                        : dict.parentSection.accessDisabled}
+                    </p>
+
+                    <p className="text-muted-foreground">
+                      {parent.firebaseUid
+                        ? dict.parentSection.accountLinked
+                        : dict.parentSection.invited}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            ))}
           </div>
         )}
       </div>

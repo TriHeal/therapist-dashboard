@@ -1,3 +1,5 @@
+import { Patient } from "./patient";
+
 export type ParentRelationship =
   | "mother"
   | "father"
