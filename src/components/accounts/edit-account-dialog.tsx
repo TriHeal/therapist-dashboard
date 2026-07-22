@@ -19,7 +19,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import {
   resendParentInvitation,
@@ -76,6 +75,9 @@ export function EditAccountDialog({
 
   const canResend =
     normalizedEmail.length > 0 && emailValid && !loading && !resending;
+
+  const relationshipLabel =
+    dict.parentSection.relationshipLabels[relationship] ?? relationship;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -178,10 +180,11 @@ export function EditAccountDialog({
                   setRelationship(val as ParentRelationship)
                 }
               >
-                <SelectTrigger id="edit-relationship">
-                  <SelectValue>
-                    {dict.parentSection.relationshipLabels[relationship]}
-                  </SelectValue>
+                <SelectTrigger
+                  id="edit-relationship"
+                  className="w-full text-start"
+                >
+                  <span className="text-start">{relationshipLabel}</span>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="mother">

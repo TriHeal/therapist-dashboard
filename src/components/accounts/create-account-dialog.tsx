@@ -19,7 +19,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { createParentAccount } from "@/lib/actions/provisioning.actions";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -59,6 +58,9 @@ export function CreateAccountDialog({
 
   const canSubmit =
     fullName.trim().length > 0 && emailValid && phoneValid && !loading;
+
+  const relationshipLabel =
+    dict.parentSection.relationshipLabels[relationship] ?? relationship;
 
   function reset() {
     setFullName("");
@@ -156,8 +158,8 @@ export function CreateAccountDialog({
                   setRelationship(value as ParentRelationship)
                 }
               >
-                <SelectTrigger className="w-full">
-                  <SelectValue />
+                <SelectTrigger className="w-full text-start">
+                  <span className="text-start">{relationshipLabel}</span>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="mother">
