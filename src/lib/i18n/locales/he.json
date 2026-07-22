@@ -300,6 +300,11 @@
   "parentSection.accessDisabled": "אין גישה לאפליקציה",
   "parentSection.accountLinked": "חשבון מקושר",
   "parentSection.invited": "הזמנה ממתינה",
+  "parentSection.waitingForActivation": "ממתין להפעלת החשבון",
+  "parentSection.resendInvitation": "שליחת הזמנה מחדש",
+  "parentSection.resendingInvitation": "שולח הזמנה...",
+  "parentSection.resendSuccess": "ההזמנה נשלחה מחדש",
+  "parentSection.resendError": "שליחת ההזמנה נכשלה",
 
   "addParent.dialogTitle": "הוספת הורה או מלווה",
   "addParent.dialogDescription": "ההורה ייקושר ל-{patientName}.",

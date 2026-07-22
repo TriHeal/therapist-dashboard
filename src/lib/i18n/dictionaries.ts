@@ -77,27 +77,27 @@ export type Dictionary = {
     activities: string;
   };
   sessionsTable: {
-  id: string;
-  date: string;
-  type: string;
-  status: string;
-  activities: string;
-  notes: string;
-  newSession: string;
-  noSessions: string;
+    id: string;
+    date: string;
+    type: string;
+    status: string;
+    activities: string;
+    notes: string;
+    newSession: string;
+    noSessions: string;
   };
   newSessionDialog: {
-  title: string;
-  description: string;
-  date: string;
-  notes: string;
-  selectActivities: string;
-  submit: string;
-  breathing: string;
-  event_processing: string;
-  memory_lake: string;
-  bonding_forest: string;
-  leaf_on_water: string;
+    title: string;
+    description: string;
+    date: string;
+    notes: string;
+    selectActivities: string;
+    submit: string;
+    breathing: string;
+    event_processing: string;
+    memory_lake: string;
+    bonding_forest: string;
+    leaf_on_water: string;
   };
   patientOverview: {
     noCompletedSessions: string;
@@ -122,6 +122,14 @@ export type Dictionary = {
     accessDisabled: string;
     accountLinked: string;
     invited: string;
+    waitingForActivation: string;
+    resendInvitation: string;
+    resendingInvitation: string;
+    resendSuccess: string;
+    resendError: string;
+    editTitle: string;
+    editDescription: string;
+    saveError: string;
   };
   addParent: {
     dialogTitle: string;
@@ -342,7 +350,6 @@ export type Dictionary = {
     errorSmsFailed: string;
     errorGeneric: string;
   };
-
 };
 
 function buildDictionary(flat: Record<string, string>): Dictionary {

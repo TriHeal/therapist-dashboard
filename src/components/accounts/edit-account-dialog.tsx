@@ -21,7 +21,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { updateParentAccount } from "@/lib/actions/provisioning.actions";
+import {
+  resendParentInvitation,
+  updateParentAccount,
+} from "@/lib/actions/provisioning.actions";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { ParentAccount, ParentRelationship } from "@/types";
 
@@ -44,11 +47,13 @@ export function EditAccountDialog({
   const [open, setOpen] = useState(false);
   const [fullName, setFullName] = useState(parent.fullName || "");
   const [relationship, setRelationship] = useState<ParentRelationship>(
-    parent.relationship || "mother"
+    parent.relationship || "mother",
   );
   const [email, setEmail] = useState(parent.email || "");
   const [phone, setPhone] = useState(parent.phone || "");
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const normalizedEmail = email.trim();
@@ -66,7 +71,11 @@ export function EditAccountDialog({
     emailValid &&
     phoneValid &&
     hasContactInfo &&
-    !loading;
+    !loading &&
+    !resending;
+
+  const canResend =
+    normalizedEmail.length > 0 && emailValid && !loading && !resending;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -91,13 +100,47 @@ export function EditAccountDialog({
     }
   }
 
+  async function handleResendInvitation() {
+    if (!canResend) return;
+
+    setResending(true);
+    setError(null);
+    setResendSuccess(false);
+
+    const updateResult = await updateParentAccount(parent.id, patientId, {
+      fullName: fullName.trim(),
+      relationship,
+      email: normalizedEmail || null,
+      phone: normalizedPhone || null,
+    });
+
+    if ("error" in updateResult) {
+      setError(dict.parentSection.saveError);
+      setResending(false);
+      return;
+    }
+
+    const resendResult = await resendParentInvitation(parent.id, patientId);
+
+    setResending(false);
+
+    if ("error" in resendResult) {
+      setError(dict.parentSection.resendError);
+      return;
+    }
+
+    setResendSuccess(true);
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs">
-          <Pencil className="h-3.5 w-3.5" />
-          {dict.common?.edit || "עריכה"}
-        </Button>
+      <DialogTrigger
+        render={
+          <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs" />
+        }
+      >
+        <Pencil className="h-3.5 w-3.5" />
+        {dict.common.edit}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
@@ -114,27 +157,31 @@ export function EditAccountDialog({
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="edit-fullName">
-                {dict.createAccountDialog.fullNameLabel}
+                {dict.addParent.fields.fullName}
               </Label>
               <Input
                 id="edit-fullName"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder={dict.createAccountDialog.fullNamePlaceholder}
+                placeholder={dict.addParent.fields.fullNamePlaceholder}
                 required
               />
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="edit-relationship">
-                {dict.createAccountDialog.relationshipLabel}
+                {dict.addParent.fields.relationship}
               </Label>
               <Select
                 value={relationship}
-                onValueChange={(val) => setRelationship(val as ParentRelationship)}
+                onValueChange={(val) =>
+                  setRelationship(val as ParentRelationship)
+                }
               >
                 <SelectTrigger id="edit-relationship">
-                  <SelectValue />
+                  <SelectValue>
+                    {dict.parentSection.relationshipLabels[relationship]}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="mother">
@@ -154,59 +201,79 @@ export function EditAccountDialog({
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="edit-email">
-                {dict.createAccountDialog.emailLabel}
-              </Label>
+              <Label htmlFor="edit-email">{dict.addParent.fields.email}</Label>
               <Input
                 id="edit-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={dict.createAccountDialog.emailPlaceholder}
+                placeholder={dict.addParent.fields.emailPlaceholder}
                 dir="ltr"
               />
               {!emailValid && (
                 <p className="text-xs text-destructive">
-                  {dict.createAccountDialog.invalidEmail}
+                  {dict.provisioning.errorInvalidEmail}
                 </p>
               )}
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="edit-phone">
-                {dict.createAccountDialog.phoneLabel}
-              </Label>
+              <Label htmlFor="edit-phone">{dict.addParent.fields.phone}</Label>
               <Input
                 id="edit-phone"
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder={dict.createAccountDialog.phonePlaceholder}
+                placeholder={dict.addParent.fields.phonePlaceholder}
                 dir="ltr"
               />
               {!phoneValid && (
                 <p className="text-xs text-destructive">
-                  {dict.createAccountDialog.invalidPhone}
+                  {dict.provisioning.errorInvalidPhone}
                 </p>
               )}
             </div>
 
-            {error && <p className="text-sm font-medium text-destructive">{error}</p>}
+            {error && (
+              <p className="text-sm font-medium text-destructive">{error}</p>
+            )}
           </div>
+          {!parent.canAccessApp && (
+            <div className="rounded-md border p-3">
+              <p className="mb-3 text-sm text-muted-foreground">
+                {dict.parentSection.waitingForActivation}
+              </p>
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleResendInvitation}
+                disabled={!canResend}
+              >
+                {resending
+                  ? dict.parentSection.resendingInvitation
+                  : dict.parentSection.resendInvitation}
+              </Button>
+
+              {resendSuccess && (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {dict.parentSection.resendSuccess}
+                </p>
+              )}
+            </div>
+          )}
 
           <DialogFooter>
             <Button
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
-              disabled={loading}
+              disabled={loading || resending}
             >
               {dict.common?.cancel || "ביטול"}
             </Button>
-            <Button type="submit" disabled={!canSubmit || loading}>
-              {loading
-                ? dict.common?.saving || "שומר..."
-                : dict.common?.save || "שמירה"}
+            <Button type="submit" disabled={!canSubmit || loading || resending}>
+              {loading ? dict.provisioning.sending : dict.common.save}
             </Button>
           </DialogFooter>
         </form>
