@@ -15,10 +15,8 @@ import {
 } from "@/components/ui/card";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import {
-  PARENT_DEMO_CREDENTIALS_KEY,
   PARENT_DEMO_PROFILE_KEY,
-  hashParentPassword,
-  normalizeParentEmail,
+  type ParentDemoProfile,
 } from "@/lib/auth/parent-demo-auth";
 
 export default function ParentLoginForm({ dict }: { dict: Dictionary }) {
@@ -34,40 +32,30 @@ export default function ParentLoginForm({ dict }: { dict: Dictionary }) {
     setIsSubmitting(true);
 
     try {
-      const normalizedEmail = normalizeParentEmail(email);
-      const serializedCredentials = localStorage.getItem(
-        PARENT_DEMO_CREDENTIALS_KEY,
-      );
-      const credentials = serializedCredentials
-        ? (JSON.parse(serializedCredentials) as {
-            email: string;
-            passwordHash: string;
-          })
-        : null;
-
-      if (!credentials) {
-        throw new Error(dict.parentAuth.invalidCredentials);
+      if (!email.trim()) {
+        throw new Error(dict.parentAuth.invalidEmail);
       }
 
-      const passwordHash = await hashParentPassword(password);
-      if (
-        normalizeParentEmail(credentials.email) !== normalizedEmail ||
-        credentials.passwordHash !== passwordHash
-      ) {
+      if (!password) {
         throw new Error(dict.parentAuth.invalidCredentials);
       }
 
       const serializedProfile = localStorage.getItem(PARENT_DEMO_PROFILE_KEY);
-      const profile = serializedProfile ? JSON.parse(serializedProfile) : null;
+      const profile = serializedProfile
+        ? (JSON.parse(serializedProfile) as ParentDemoProfile)
+        : null;
 
-      if (!profile) {
+      if (!profile?.parentId || !profile?.patient) {
         throw new Error(dict.parentAuth.noProfileFound);
       }
 
       const response = await fetch("/api/parent-demo-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profile),
+        body: JSON.stringify({
+          parentId: profile.parentId,
+          patient: profile.patient,
+        }),
       });
 
       if (!response.ok) {

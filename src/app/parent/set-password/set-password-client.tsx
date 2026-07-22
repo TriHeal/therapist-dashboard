@@ -14,12 +14,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
-import {
-  PARENT_DEMO_CREDENTIALS_KEY,
-  hashParentPassword,
-  isValidParentEmail,
-  normalizeParentEmail,
-} from "@/lib/auth/parent-demo-auth";
 
 export default function SetParentPasswordForm({ dict }: { dict: Dictionary }) {
   const router = useRouter();
@@ -33,14 +27,12 @@ export default function SetParentPasswordForm({ dict }: { dict: Dictionary }) {
     event.preventDefault();
     setError(null);
 
-    const normalizedEmail = normalizeParentEmail(email);
-
-    if (!isValidParentEmail(normalizedEmail)) {
+    if (!email.trim()) {
       setError(dict.parentAuth.invalidEmail);
       return;
     }
 
-    if (password.length < 6) {
+    if (!password) {
       setError(dict.parentAuth.passwordTooShort);
       return;
     }
@@ -53,14 +45,7 @@ export default function SetParentPasswordForm({ dict }: { dict: Dictionary }) {
     setIsSubmitting(true);
 
     try {
-      // Presentation-only mocked authentication: password state is stored locally.
-      const passwordHash = await hashParentPassword(password);
-      localStorage.setItem(
-        PARENT_DEMO_CREDENTIALS_KEY,
-        JSON.stringify({ email: normalizedEmail, passwordHash }),
-      );
-
-      router.push("/parent");
+      router.replace("/parent");
       router.refresh();
     } catch (err) {
       setError(
