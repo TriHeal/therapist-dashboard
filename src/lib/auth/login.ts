@@ -48,7 +48,9 @@ export async function login(id: string, password: string): Promise<Role> {
   const sessionRes = await fetch("/api/session", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ idToken }),
+    // Send the role from the backend login response — the Firebase token doesn't
+    // carry it, so /api/session persists it in a separate cookie.
+    body: JSON.stringify({ idToken, role: loginRole }),
   });
 
   console.log("7. session response", sessionRes.status);
