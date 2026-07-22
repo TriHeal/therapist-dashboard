@@ -19,7 +19,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { createParentAccount } from "@/lib/actions/provisioning.actions";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -47,27 +46,27 @@ export function CreateAccountDialog({
     useState<ParentRelationship>("mother");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [requestAppAccess, setRequestAppAccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const normalizedEmail = email.trim();
   const normalizedPhone = normalizePhone(phone);
 
-  const emailValid =
-    normalizedEmail.length === 0 || EMAIL_RE.test(normalizedEmail);
+  const emailValid = EMAIL_RE.test(normalizedEmail);
   const phoneValid =
     normalizedPhone.length === 0 || PHONE_RE.test(normalizedPhone);
 
   const canSubmit =
     fullName.trim().length > 0 && emailValid && phoneValid && !loading;
 
+  const relationshipLabel =
+    dict.parentSection.relationshipLabels[relationship] ?? relationship;
+
   function reset() {
     setFullName("");
     setRelationship("mother");
     setEmail("");
     setPhone("");
-    setRequestAppAccess(false);
     setLoading(false);
     setError(null);
   }
@@ -94,7 +93,7 @@ export function CreateAccountDialog({
       relationship,
       email: normalizedEmail || null,
       phone: normalizedPhone || null,
-      requestAppAccess,
+      requestAppAccess: true,
     });
 
     setLoading(false);
@@ -159,8 +158,8 @@ export function CreateAccountDialog({
                   setRelationship(value as ParentRelationship)
                 }
               >
-                <SelectTrigger className="w-full">
-                  <SelectValue />
+                <SelectTrigger className="w-full text-start">
+                  <span className="text-start">{relationshipLabel}</span>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="mother">
@@ -187,6 +186,7 @@ export function CreateAccountDialog({
                 id="parent-email"
                 type="email"
                 inputMode="email"
+                required
                 dir="ltr"
                 value={email}
                 placeholder={dict.addParent.fields.emailPlaceholder}
@@ -216,18 +216,6 @@ export function CreateAccountDialog({
                 }}
               />
             </div>
-
-            <label className="flex cursor-pointer items-center gap-3 text-sm">
-              <input
-                type="checkbox"
-                checked={requestAppAccess}
-                onChange={(event) =>
-                  setRequestAppAccess(event.target.checked)
-                }
-                className="size-4 rounded border-input accent-primary"
-              />
-              <span>{dict.addParent.fields.requestAppAccess}</span>
-            </label>
 
             {error && (
               <p className="text-sm text-destructive" aria-live="polite">

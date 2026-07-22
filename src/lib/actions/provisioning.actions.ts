@@ -151,3 +151,85 @@ export async function createParentAccount(
     return { error: "CREATE_FAILED" };
   }
 }
+
+export async function getParentAccounts(
+  patientId: string,
+): Promise<ParentAccount[]> {
+  if (USE_API) {
+    try {
+      return await apiFetch<ParentAccount[]>(
+        `/parent-accounts?patientId=${patientId}`,
+      );
+    } catch (err) {
+      console.error("Failed to fetch parent accounts:", err);
+      return [];
+    }
+  }
+  return parentAccounts.filter((p) => p.patientIds.includes(patientId));
+}
+
+export async function updateParentAccount(
+  parentId: string,
+  patientId: string,
+  input: {
+    fullName?: string;
+    relationship?: ParentRelationship;
+    email?: string | null;
+    phone?: string | null;
+  },
+): Promise<{ success: boolean } | { error: string }> {
+  try {
+    if (USE_API) {
+      await apiFetch<ParentAccount>(`/parent-accounts/${parentId}`, {
+        method: "PATCH",
+        body: input,
+      });
+    } else {
+      const parent = parentAccounts.find((p) => p.id === parentId);
+      if (parent) {
+        if (input.fullName) parent.fullName = input.fullName;
+        if (input.relationship) parent.relationship = input.relationship;
+        if (input.email !== undefined) parent.email = input.email;
+        if (input.phone !== undefined) parent.phone = input.phone;
+      }
+    }
+    revalidatePath(`/therapist/patients/${patientId}`);
+    return { success: true };
+  } catch (err) {
+    console.error("Failed to update parent account:", err);
+    return { error: "UPDATE_FAILED" };
+  }
+}
+
+export async function resendParentInvitation(
+  parentId: string,
+  patientId: string,
+): Promise<{ success: true } | { error: string }> {
+  try {
+    if (USE_API) {
+      await apiFetch<{ emailSent: true }>(
+        `/parent-accounts/${parentId}/resend-invitation`,
+        {
+          method: "POST",
+        },
+      );
+    } else {
+      const parent = parentAccounts.find(
+        (candidate) => candidate.id === parentId,
+      );
+
+      if (!parent?.email) {
+        return { error: "EMAIL_REQUIRED" };
+      }
+
+      console.log(`[mock email] Resent parent invitation to ${parent.email}`);
+    }
+
+    revalidatePath(`/therapist/patients/${patientId}`);
+
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to resend parent invitation:", error);
+    return { error: "RESEND_FAILED" };
+  }
+}

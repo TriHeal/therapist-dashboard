@@ -20,7 +20,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { createPatient } from "@/lib/actions/patients.actions";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -34,6 +33,13 @@ export function AddPatientDialog({ dict }: { dict: Dictionary }) {
   const [parentSharingEnabled, setParentSharingEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const sexLabel =
+    sex === "male"
+      ? dict.patientForm.sexMale
+      : sex === "female"
+        ? dict.patientForm.sexFemale
+        : dict.patientForm.sexUnspecified;
 
   function reset() {
     setSex("unspecified");
@@ -114,9 +120,7 @@ export function AddPatientDialog({ dict }: { dict: Dictionary }) {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="patient-age">
-                {dict.patientForm.age}
-              </Label>
+              <Label htmlFor="patient-age">{dict.patientForm.age}</Label>
               <Input
                 id="patient-age"
                 name="age"
@@ -135,8 +139,8 @@ export function AddPatientDialog({ dict }: { dict: Dictionary }) {
                 value={sex}
                 onValueChange={(value) => setSex(value as PatientSex)}
               >
-                <SelectTrigger className="w-full">
-                  <SelectValue />
+                <SelectTrigger className="w-full text-start">
+                  <span className="text-start">{sexLabel}</span>
                 </SelectTrigger>
 
                 <SelectContent>

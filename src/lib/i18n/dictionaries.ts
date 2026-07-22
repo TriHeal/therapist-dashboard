@@ -122,6 +122,14 @@ export type Dictionary = {
     accessDisabled: string;
     accountLinked: string;
     invited: string;
+    waitingForActivation: string;
+    resendInvitation: string;
+    resendingInvitation: string;
+    resendSuccess: string;
+    resendError: string;
+    editTitle: string;
+    editDescription: string;
+    saveError: string;
   };
   addParent: {
     dialogTitle: string;
@@ -292,9 +300,35 @@ export type Dictionary = {
     description: string;
     childCard: string;
     activeActivitiesTitle: string;
+    viewActivities: string;
     noActiveActivities: string;
     recentReflectionsTitle: string;
     noReflections: string;
+  };
+  parentAuth: {
+    activateTitle: string;
+    activateDescription: string;
+    activationCode: string;
+    activationSubmit: string;
+    activating: string;
+    activationFailed: string;
+    setPasswordTitle: string;
+    setPasswordDescription: string;
+    loginTitle: string;
+    loginDescription: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    submit: string;
+    loginSubmit: string;
+    loggingIn: string;
+    invalidEmail: string;
+    passwordTooShort: string;
+    passwordsMustMatch: string;
+    invalidCredentials: string;
+    noProfileFound: string;
+    savePasswordError: string;
+    saving: string;
   };
   parentActivitiesPage: {
     title: string;
@@ -345,7 +379,6 @@ export type Dictionary = {
     errorSmsFailed: string;
     errorGeneric: string;
   };
-
 };
 
 function buildDictionary(flat: Record<string, string>): Dictionary {

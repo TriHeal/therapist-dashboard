@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { getDictionary } from "@/lib/i18n/get-locale";
+import { RefreshOnFocus } from "@/components/layout/refresh-on-focus";
 
 export default async function TherapistLayout({
   children,
@@ -10,6 +11,7 @@ export default async function TherapistLayout({
 
   return (
     <div className="flex h-screen">
+      <RefreshOnFocus />
       <AppSidebar dict={dict} locale={locale} />
       <div className="flex-1 overflow-y-auto">{children}</div>
     </div>
