@@ -5,13 +5,27 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
-export function PatientSubnav({ patientId, dict }: { patientId: string; dict: Dictionary }) {
+export function PatientSubnav({
+  patientId,
+  dict,
+}: {
+  patientId: string;
+  dict: Dictionary;
+}) {
   const pathname = usePathname();
   const tabs = [
-    { href: `/therapist/patients/${patientId}`, label: dict.patientSubnav.overview },
-    { href: `/therapist/patients/${patientId}/sessions`, label: dict.patientSubnav.sessions },
-    { href: `/therapist/patients/${patientId}/timeline`, label: dict.patientSubnav.timeline },
-    { href: `/therapist/patients/${patientId}/progress`, label: dict.patientSubnav.progress },
+    {
+      href: `/therapist/patients/${patientId}`,
+      label: dict.patientSubnav.overview,
+    },
+    {
+      href: `/therapist/patients/${patientId}/sessions`,
+      label: dict.patientSubnav.sessions,
+    },
+    {
+      href: `/therapist/patients/${patientId}/progress`,
+      label: dict.patientSubnav.progress,
+    },
   ];
 
   return (
@@ -26,7 +40,7 @@ export function PatientSubnav({ patientId, dict }: { patientId: string; dict: Di
               "px-3 py-2 text-sm border-b-2 -mb-px",
               active
                 ? "border-foreground font-medium"
-                : "border-transparent text-muted-foreground hover:text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground",
             )}
           >
             {tab.label}

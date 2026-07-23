@@ -13,6 +13,8 @@ import type { Dictionary, Locale } from "@/lib/i18n/dictionaries";
 import type { Session } from "@/types";
 import { CreateSessionDialog } from "./create-session-dialog";
 import { EndSessionButton } from "./end-session-button";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function SessionsTableContainer({
   sessions,
@@ -65,12 +67,15 @@ export function SessionsTableContainer({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[120px]">{dict.sessionsTable.id}</TableHead>
+                <TableHead className="w-[120px]">
+                  {dict.sessionsTable.id}
+                </TableHead>
                 <TableHead>{dict.sessionsTable.date}</TableHead>
                 <TableHead>{dict.sessionsTable.type}</TableHead>
                 <TableHead>{dict.sessionsTable.status}</TableHead>
                 <TableHead>{dict.sessionsTable.activities}</TableHead>
                 <TableHead>{dict.sessionsTable.notes}</TableHead>
+                <TableHead>{dict.sessionsTable.actions}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -96,8 +101,8 @@ export function SessionsTableContainer({
                         session.status === "completed"
                           ? "default"
                           : session.status === "in_progress"
-                          ? "secondary"
-                          : "destructive"
+                            ? "secondary"
+                            : "destructive"
                       }
                     >
                       {dict.sessionStatus[session.status] || session.status}
@@ -107,7 +112,11 @@ export function SessionsTableContainer({
                     {session.activities && session.activities.length > 0 ? (
                       <div className="flex flex-wrap gap-1">
                         {session.activities.map((act) => (
-                          <Badge key={act.type} variant="secondary" className="text-xs">
+                          <Badge
+                            key={act.type}
+                            variant="secondary"
+                            className="text-xs"
+                          >
                             {getActivityName(act.type)}
                           </Badge>
                         ))}
@@ -116,8 +125,39 @@ export function SessionsTableContainer({
                       <span className="text-muted-foreground">—</span>
                     )}
                   </TableCell>
-                  <TableCell className="max-w-xs truncate" title={session.notes}>
-                    {session.notes || <span className="text-muted-foreground">—</span>}
+                  <TableCell
+                    className="max-w-xs truncate"
+                    title={session.notes}
+                  >
+                    {session.notes || (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {session.status === "in_progress" ? (
+                      <Button
+                        size="sm"
+                        render={
+                          <Link href={`/therapist/patients/${patientId}/live`}>
+                            {dict.sessionsTable.continueSession}
+                          </Link>
+                        }
+                      />
+                    ) : session.status === "completed" ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        render={
+                          <Link
+                            href={`/therapist/patients/${patientId}/sessions/${session.id}`}
+                          >
+                            {dict.sessionsTable.viewSession}
+                          </Link>
+                        }
+                      />
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

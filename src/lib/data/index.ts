@@ -9,3 +9,4 @@ export * from "./services/live.service";
 export * from "./services/activities.service";
 export * from "./services/parent.service";
 export * from "./services/parent-audits.service";
+export * from "./services/live-session-activity-run.service";
