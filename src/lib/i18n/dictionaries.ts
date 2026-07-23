@@ -85,6 +85,9 @@ export type Dictionary = {
     notes: string;
     newSession: string;
     noSessions: string;
+    actions: string;
+    viewSession: string;
+    continueSession: string;
   };
   newSessionDialog: {
     title: string;
@@ -174,13 +177,12 @@ export type Dictionary = {
     overallGood: string;
   };
   sessionSummary: { timeToSync: string };
-  sessionDetail: {
+  sessionDetails: {
     title: string;
-    ediHistory: string;
-    triggerKeywords: string;
-    parentReflection: string;
-    parentEstimatedTime: string;
-    note: string;
+    summary: string;
+    activityRuns: string;
+    noActivityRuns: string;
+    backToSessions: string;
   };
   edi: {
     fact: string;
@@ -311,6 +313,27 @@ export type Dictionary = {
   } & { status: Record<ActivityStatus, string> } & {
     type: Record<ActivityType, string>;
   };
+
+  rocksFlow: {
+    title: string;
+    whatHappened: string;
+    facts: string;
+    interpretations: string;
+    addFact: string;
+    addInterpretation: string;
+    removeFact: string;
+    removeInterpretation: string;
+    save: string;
+    stopActivity: string;
+    saved: string;
+    errorTitle: string;
+    backToSession: string;
+    openActivity: string;
+    viewActivity: string;
+    previousActivities: string;
+    eventLabel: string;
+  };
+
   schedule: { title: string; description: string; noUpcoming: string };
   locale: { hebrew: string; english: string };
   parentNav: {

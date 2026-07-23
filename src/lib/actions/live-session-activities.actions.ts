@@ -4,7 +4,10 @@ import { revalidatePath } from "next/cache";
 import { apiFetch, USE_API } from "@/lib/api/client";
 import { sessions } from "@/lib/data/mock/sessions.mock";
 
-type ActivityActionResult = { success: true } | { error: string };
+type StartActivityActionResult =
+  { success: true; activityId: string } | { error: string };
+
+type StopActivityActionResult = { success: true } | { error: string };
 
 function revalidateSessionPages(patientId: string) {
   revalidatePath(`/therapist/patients/${patientId}/live`);
@@ -15,16 +18,22 @@ export async function startLiveSessionActivity(
   sessionId: string,
   patientId: string,
   activityType: string,
-): Promise<ActivityActionResult> {
+): Promise<StartActivityActionResult> {
   try {
+    let activityId: string;
     if (USE_API) {
-      await apiFetch(`/activities/sessions/${sessionId}/start`, {
-        method: "POST",
-        body: {
-          activityType,
-          activityCategory: "clinic",
+      const activity = await apiFetch<{ id: string }>(
+        `/activities/sessions/${sessionId}/start`,
+        {
+          method: "POST",
+          body: {
+            activityType,
+            activityCategory: "clinic",
+          },
         },
-      });
+      );
+
+      activityId = activity.id;
     } else {
       const session = sessions.find(
         (item) => item.id === sessionId && item.patientId === patientId,
@@ -48,10 +57,11 @@ export async function startLiveSessionActivity(
       }
 
       activity.status = "active";
+      activityId = `activity-mock-${Date.now()}`;
     }
 
     revalidateSessionPages(patientId);
-    return { success: true };
+    return { success: true, activityId };
   } catch (error: unknown) {
     console.error("Failed to start live-session activity:", error);
 
@@ -65,7 +75,7 @@ export async function startLiveSessionActivity(
 export async function stopLiveSessionActivity(
   sessionId: string,
   patientId: string,
-): Promise<ActivityActionResult> {
+): Promise<StopActivityActionResult> {
   try {
     if (USE_API) {
       await apiFetch(`/activities/sessions/${sessionId}/stop`, {

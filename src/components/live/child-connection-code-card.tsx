@@ -17,10 +17,12 @@ export function ChildConnectionCodeCard({
   patientId,
   dict,
   locale,
+  onCodeGenerated,
 }: {
   patientId: string;
   dict: Dictionary;
   locale: Locale;
+  onCodeGenerated?: () => void;
 }) {
   const [code, setCode] = useState<string | null>(null);
   const [expiresAt, setExpiresAt] = useState<number | null>(null);
@@ -45,6 +47,7 @@ export function ChildConnectionCodeCard({
 
     setCode(result.code);
     setExpiresAt(result.expiresAt);
+    onCodeGenerated?.();
     setIsLoading(false);
   }
 

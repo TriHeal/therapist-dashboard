@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { AppHeader } from "@/components/layout/app-header";
-import { ChildConnectionCodeCard } from "@/components/live/child-connection-code-card";
 import { EndSessionButton } from "@/components/sessions/end-session-button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -10,9 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getPatient, getPatientSessions } from "@/lib/data";
+import {
+  getPatient,
+  getPatientSessions,
+  getLiveSessionActivityRuns,
+} from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-locale";
-import { LiveSessionActivityControls } from "@/components/live/live-session-activity-controls";
+import { LiveSessionControls } from "@/components/live/live-session-controls";
 
 export default async function LiveSessionDetailPage({
   params,
@@ -32,6 +35,10 @@ export default async function LiveSessionDetailPage({
   const activeSession = sessions.find(
     (session) => session.status === "in_progress",
   );
+
+  const activityRuns = activeSession
+    ? await getLiveSessionActivityRuns(activeSession.id)
+    : [];
 
   const activeSessionIndex = activeSession
     ? sessions.findIndex((session) => session.id === activeSession.id)
@@ -97,11 +104,13 @@ export default async function LiveSessionDetailPage({
                   </h3>
 
                   {activeSession.activities?.length ? (
-                    <LiveSessionActivityControls
+                    <LiveSessionControls
                       sessionId={activeSession.id}
                       patientId={patientId}
-                      activities={activeSession.activities}
+                      activities={activeSession.activities ?? []}
+                      activityRuns={activityRuns}
                       dict={dict}
+                      locale={locale}
                     />
                   ) : (
                     <p className="text-sm text-muted-foreground">
@@ -112,8 +121,11 @@ export default async function LiveSessionDetailPage({
               </CardContent>
             </Card>
 
-            <ChildConnectionCodeCard
-              patientId={patient.id}
+            <LiveSessionControls
+              sessionId={activeSession.id}
+              patientId={patientId}
+              activities={activeSession.activities ?? []}
+              activityRuns={activityRuns}
               dict={dict}
               locale={locale}
             />
