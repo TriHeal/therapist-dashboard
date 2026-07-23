@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { getPatient, getPatientSessions } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-locale";
+import { LiveSessionActivityControls } from "@/components/live/live-session-activity-controls";
 
 export default async function LiveSessionDetailPage({
   params,
@@ -32,21 +33,14 @@ export default async function LiveSessionDetailPage({
     (session) => session.status === "in_progress",
   );
 
-  const getActivityName = (type: string) =>
-    (dict.newSessionDialog as Record<string, string>)[type] || type;
+  const activeSessionIndex = activeSession
+    ? sessions.findIndex((session) => session.id === activeSession.id)
+    : -1;
 
-  const getActivityStatus = (status: string) => {
-    switch (status) {
-      case "pending":
-        return dict.liveDetail.activityPending;
-      case "active":
-        return dict.liveDetail.activityActive;
-      case "completed":
-        return dict.liveDetail.activityCompleted;
-      default:
-        return status;
-    }
-  };
+  const activeSessionNumber =
+    activeSessionIndex >= 0 ? sessions.length - activeSessionIndex : null;
+
+  const dateLocale = locale === "he" ? "he-IL" : "en-US";
 
   return (
     <>
@@ -72,8 +66,18 @@ export default async function LiveSessionDetailPage({
                     <p className="text-sm font-medium text-muted-foreground">
                       {dict.liveDetail.sessionLabel}
                     </p>
-                    <p className="break-all text-base font-semibold">
-                      {activeSession.id}
+                    <p className="text-base font-semibold">
+                      #{activeSessionNumber}
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(activeSession.startedAt).toLocaleString(
+                        dateLocale,
+                        {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        },
+                      )}
                     </p>
                   </div>
 
@@ -87,27 +91,18 @@ export default async function LiveSessionDetailPage({
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <h3 className="text-sm font-semibold">
                     {dict.liveDetail.plannedActivities}
                   </h3>
 
                   {activeSession.activities?.length ? (
-                    <ul className="space-y-2">
-                      {[...activeSession.activities]
-                        .sort((a, b) => a.order - b.order)
-                        .map((activity) => (
-                          <li
-                            key={`${activity.type}-${activity.order}`}
-                            className="flex items-center justify-between rounded-lg border px-3 py-2"
-                          >
-                            <span>{getActivityName(activity.type)}</span>
-                            <span className="text-sm text-muted-foreground">
-                              {getActivityStatus(activity.status)}
-                            </span>
-                          </li>
-                        ))}
-                    </ul>
+                    <LiveSessionActivityControls
+                      sessionId={activeSession.id}
+                      patientId={patientId}
+                      activities={activeSession.activities}
+                      dict={dict}
+                    />
                   ) : (
                     <p className="text-sm text-muted-foreground">
                       {dict.liveDetail.noPlannedActivities}

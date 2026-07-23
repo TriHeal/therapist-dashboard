@@ -30,10 +30,6 @@ export function AppSidebar({
   if (patientId) {
     navItems = [
       { href: "/therapist/patients", label: "← " + dict.nav.patients },
-      {
-        href: `/therapist/patients/${patientId}/timeline`,
-        label: dict.patientSubnav?.timeline || "Timeline",
-      },
     ];
   } else {
     navItems = [

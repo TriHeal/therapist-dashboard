@@ -98,6 +98,7 @@ export type Dictionary = {
     memory_lake: string;
     bonding_forest: string;
     leaf_on_water: string;
+    guided_relaxation: string;
   };
   patientOverview: {
     noCompletedSessions: string;
@@ -274,6 +275,12 @@ export type Dictionary = {
     activityPending: string;
     activityActive: string;
     activityCompleted: string;
+    startActivity: string;
+    stopActivity: string;
+    startingActivity: string;
+    stoppingActivity: string;
+    activityUpdateError: string;
+    startActivityAgain: string;
   };
   settingsPage: {
     title: string;

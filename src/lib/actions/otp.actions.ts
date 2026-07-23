@@ -17,7 +17,9 @@ export async function generateChildConnectionCode(
 
   if (!USE_API) {
     const expiresAt = Date.now() + 15 * 60 * 1000;
-    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const code = Math.floor(Math.random() * 1_000_000)
+      .toString()
+      .padStart(6, "0");
     return { code, expiresAt };
   }
 
