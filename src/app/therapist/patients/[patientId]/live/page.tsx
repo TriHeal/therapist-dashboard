@@ -97,27 +97,6 @@ export default async function LiveSessionDetailPage({
                     </p>
                   </div>
                 </div>
-
-                <div className="space-y-3">
-                  <h3 className="text-sm font-semibold">
-                    {dict.liveDetail.plannedActivities}
-                  </h3>
-
-                  {activeSession.activities?.length ? (
-                    <LiveSessionControls
-                      sessionId={activeSession.id}
-                      patientId={patientId}
-                      activities={activeSession.activities ?? []}
-                      activityRuns={activityRuns}
-                      dict={dict}
-                      locale={locale}
-                    />
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      {dict.liveDetail.noPlannedActivities}
-                    </p>
-                  )}
-                </div>
               </CardContent>
             </Card>
 

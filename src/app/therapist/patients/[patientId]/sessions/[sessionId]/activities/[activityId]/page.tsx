@@ -65,6 +65,7 @@ export default async function EventProcessingActivityPage({
       <div className="flex w-full justify-end pt-2 pl-4">
         <Button
           variant="outline"
+          nativeButton={false}
           render={<Link href={backHref}>{dict.rocksFlow.backToSession}</Link>}
         />
       </div>
