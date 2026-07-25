@@ -229,6 +229,7 @@ export function LiveSessionActivityControls({
               <Button
                 size="sm"
                 variant="outline"
+                nativeButton={false}
                 render={
                   <Link
                     href={`/therapist/patients/${patientId}/sessions/${sessionId}/activities/${run.id}`}
