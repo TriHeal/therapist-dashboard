@@ -38,6 +38,7 @@ export type Dictionary = {
     save: string;
     close: string;
     edit: string;
+    error: string;
   };
   patientStatus: Record<PatientStatus, string>;
   sessionStatus: Record<SessionStatus, string>;
@@ -283,6 +284,8 @@ export type Dictionary = {
     stoppingActivity: string;
     activityUpdateError: string;
     startActivityAgain: string;
+    activeActivityMustBeStopped: string;
+    endSessionError: string;
   };
   settingsPage: {
     title: string;

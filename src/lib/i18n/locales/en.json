@@ -20,6 +20,7 @@
   "common.save": "Save",
   "common.close": "Close",
   "common.edit": "Edit",
+  "error": "Error",
 
   "patientStatus.active": "Active",
   "patientStatus.paused": "Paused",
@@ -219,6 +220,8 @@
   "liveDetail.startingActivity": "Starting...",
   "liveDetail.stoppingActivity": "Stopping...",
   "liveDetail.activityUpdateError": "Unable to update activity",
+  "activeActivityMustBeStopped": "Finish the active activity before ending the session.",
+  "endSessionError": "The session could not be ended. Please try again.",
 
   "settingsPage.title": "Settings",
   "settingsPage.description": "Configure parent-shared guidance card visibility per patient",

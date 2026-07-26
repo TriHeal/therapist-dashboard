@@ -45,6 +45,12 @@ export default async function LiveSessionDetailPage({
     ? await getLiveSessionActivityRuns(activeSession.id)
     : [];
 
+    const hasActiveActivity =
+    activeSession?.activities?.some(
+      (activity) => activity.status === "active",
+    ) ||
+    activityRuns.some((run) => run.status === "active");
+    
   const activeSessionIndex = activeSession
     ? sessions.findIndex((session) => session.id === activeSession.id)
     : -1;
@@ -124,6 +130,7 @@ export default async function LiveSessionDetailPage({
                 sessionId={activeSession.id}
                 patientId={patientId}
                 dict={dict}
+                hasActiveActivity={hasActiveActivity}
               />
 
               <div className="flex justify-end">
