@@ -138,7 +138,7 @@ export default async function SessionDetailsPage({
                           variant="outline"
                           render={
                             <Link
-                              href={`/therapist/patients/${patientId}/sessions/${sessionId}/activities/${run.id}`}
+                              href={`/therapist/patients/${patientId}/sessions/${sessionId}/activities/event-processing/runs/${run.id}`}
                             >
                               {dict.rocksFlow.viewActivity}
                             </Link>
