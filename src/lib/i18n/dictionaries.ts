@@ -332,13 +332,6 @@ export type Dictionary = {
     viewActivity: string;
     previousActivities: string;
     eventLabel: string;
-    newActivity: string;
-    noActivities: string;
-    startedAt: string;
-    statusLabel: string;
-    continueActivity: string;
-    backToActivities: string;
-    backToSessions: string;
   };
 
   schedule: { title: string; description: string; noUpcoming: string };

@@ -130,7 +130,6 @@ export async function createParentAccount(
       patientIds: [input.patientId],
       createdAt: now,
       updatedAt: now,
-      invitationStatus: 'pending',
     };
 
     parentAccounts.unshift(account);
