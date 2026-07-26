@@ -52,6 +52,11 @@ export function SessionsTableContainer({
             sessionId={activeSession.id}
             patientId={patientId}
             dict={dict}
+            hasActiveActivity={
+              activeSession.activities?.some(
+                (activity) => activity.status === "active",
+              ) ?? false
+            }
           />
         </div>
       )}

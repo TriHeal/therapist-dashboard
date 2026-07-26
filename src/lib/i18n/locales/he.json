@@ -20,6 +20,7 @@
   "common.save": "שמירה",
   "common.close": "סגירה",
   "common.edit": "עריכה",
+  "error": "שגיאה",
 
   "patientStatus.active": "פעיל",
   "patientStatus.paused": "בהפסקה",
@@ -220,6 +221,8 @@
   "liveDetail.stoppingActivity": "מסיים...",
   "liveDetail.activityUpdateError": "לא ניתן לעדכן את הפעילות",
   "liveDetail.startActivityAgain": "התחלה מחדש",
+  "activeActivityMustBeStopped": "יש לסיים את הפעילות הפעילה לפני סיום המפגש.",
+  "endSessionError": "לא ניתן היה לסיים את המפגש. נסו שוב.",
 
   "settingsPage.title": "הגדרות",
   "settingsPage.description": "הגדרת חשיפת כרטיסי הכוונה משותפים להורה לכל מטופל",
