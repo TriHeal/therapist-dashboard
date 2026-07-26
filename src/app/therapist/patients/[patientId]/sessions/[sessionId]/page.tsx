@@ -136,9 +136,10 @@ export default async function SessionDetailsPage({
                         <Button
                           size="sm"
                           variant="outline"
+                          nativeButton={false}
                           render={
                             <Link
-                              href={`/therapist/patients/${patientId}/sessions/${sessionId}/activities/event-processing/runs/${run.id}`}
+                              href={`/therapist/patients/${patientId}/sessions/${sessionId}/activities/event-processing`}
                             >
                               {dict.rocksFlow.viewActivity}
                             </Link>
@@ -157,6 +158,7 @@ export default async function SessionDetailsPage({
           <Button
             variant="outline"
             className="mr-auto"
+            nativeButton={false}
             render={
               <Link href={`/therapist/patients/${patientId}/sessions`}>
                 {dict.sessionDetails.backToSessions}
