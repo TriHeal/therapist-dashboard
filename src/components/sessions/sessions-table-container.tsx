@@ -137,7 +137,6 @@ export function SessionsTableContainer({
                     {session.status === "in_progress" ? (
                       <Button
                         size="sm"
-                        nativeButton={false}
                         render={
                           <Link href={`/therapist/patients/${patientId}/live`}>
                             {dict.sessionsTable.continueSession}
@@ -147,7 +146,6 @@ export function SessionsTableContainer({
                     ) : session.status === "completed" ? (
                       <Button
                         size="sm"
-                        nativeButton={false}
                         variant="outline"
                         render={
                           <Link

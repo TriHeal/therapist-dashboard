@@ -9,6 +9,7 @@ import {
   startLiveSessionActivity,
   stopLiveSessionActivity,
 } from "@/lib/actions/live-session-activities.actions";
+import Link from "next/link";
 import type { LiveSessionActivityRun } from "@/lib/data";
 import type { Dictionary, Locale } from "@/lib/i18n/dictionaries";
 
@@ -22,9 +23,9 @@ export function LiveSessionActivityControls({
   sessionId,
   patientId,
   activities,
-  activityRuns: _activityRuns,
+  activityRuns,
   dict,
-  locale: _locale,
+  locale,
   canStartActivities,
 }: {
   sessionId: string;
@@ -36,7 +37,6 @@ export function LiveSessionActivityControls({
   canStartActivities: boolean;
 }) {
   const router = useRouter();
-
   const [loadingActivity, setLoadingActivity] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,9 +48,22 @@ export function LiveSessionActivityControls({
     (activity) => activity.status === "active",
   );
 
-  const eventProcessingHref =
-    `/therapist/patients/${patientId}/sessions/${sessionId}` +
-    "/activities/event-processing";
+  const dateLocale = locale === "he" ? "he-IL" : "en-US";
+
+  const activeEventProcessingRun = activityRuns.find(
+    (run) => run.activityType === "event_processing" && run.status === "active",
+  );
+
+  const completedEventProcessingRuns = activityRuns
+    .filter(
+      (run) =>
+        run.activityType === "event_processing" && run.status === "completed",
+    )
+    .sort(
+      (first, second) =>
+        new Date(second.startedAt).getTime() -
+        new Date(first.startedAt).getTime(),
+    );
 
   const getActivityName = (type: string) =>
     (dict.newSessionDialog as Record<string, string>)[type] || type;
@@ -80,6 +93,10 @@ export function LiveSessionActivityControls({
 
     if ("error" in result) {
       setError(result.error);
+    } else if (activityType === "event_processing") {
+      router.push(
+        `/therapist/patients/${patientId}/sessions/${sessionId}/activities/${result.activityId}`,
+      );
     } else {
       router.refresh();
     }
@@ -123,7 +140,6 @@ export function LiveSessionActivityControls({
           >
             <div>
               <p className="font-medium">{getActivityName(activity.type)}</p>
-
               <p className="text-sm text-muted-foreground">
                 {getActivityStatus(activity.status)}
               </p>
@@ -132,44 +148,37 @@ export function LiveSessionActivityControls({
             {(activity.status === "pending" ||
               activity.status === "completed") &&
             !hasActiveActivity ? (
-              activity.type === "event_processing" ? (
-                <Button
-                  size="sm"
-                  disabled={!canStartActivities}
-                  onClick={() => router.push(eventProcessingHref)}
-                >
-                  {activity.status === "completed"
-                    ? dict.liveDetail.startActivityAgain
-                    : dict.liveDetail.startActivity}
-                </Button>
-              ) : (
-                <Button
-                  size="sm"
-                  disabled={isBusy || !canStartActivities}
-                  onClick={() => handleStart(activity.type)}
-                >
-                  {isStarting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      {dict.liveDetail.startingActivity}
-                    </>
-                  ) : activity.status === "completed" ? (
-                    dict.liveDetail.startActivityAgain
-                  ) : (
-                    dict.liveDetail.startActivity
-                  )}
-                </Button>
-              )
+              <Button
+                size="sm"
+                disabled={isBusy || !canStartActivities}
+                onClick={() => handleStart(activity.type)}
+              >
+                {isStarting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {dict.liveDetail.startingActivity}
+                  </>
+                ) : activity.status === "completed" ? (
+                  dict.liveDetail.startActivityAgain
+                ) : (
+                  dict.liveDetail.startActivity
+                )}
+              </Button>
             ) : null}
 
             {activity.status === "active" ? (
-              activity.type === "event_processing" ? (
+              activity.type === "event_processing" &&
+              activeEventProcessingRun ? (
                 <Button
                   size="sm"
-                  onClick={() => router.push(eventProcessingHref)}
-                >
-                  {dict.rocksFlow.openActivity}
-                </Button>
+                  render={
+                    <Link
+                      href={`/therapist/patients/${patientId}/sessions/${sessionId}/activities/${activeEventProcessingRun.id}`}
+                    >
+                      {dict.rocksFlow.openActivity}
+                    </Link>
+                  }
+                />
               ) : (
                 <Button
                   size="sm"
@@ -191,6 +200,47 @@ export function LiveSessionActivityControls({
           </div>
         );
       })}
+
+      {completedEventProcessingRuns.length > 0 ? (
+        <div className="space-y-3 border-t pt-4">
+          <h4 className="text-sm font-semibold">
+            {dict.rocksFlow.previousActivities}
+          </h4>
+
+          {completedEventProcessingRuns.map((run, index) => (
+            <div
+              key={run.id}
+              className="flex flex-wrap items-center justify-between gap-3 rounded-lg border px-3 py-3"
+            >
+              <div>
+                <p className="font-medium">
+                  {dict.rocksFlow.eventLabel}{" "}
+                  {completedEventProcessingRuns.length - index}
+                </p>
+
+                <p className="text-sm text-muted-foreground">
+                  {new Date(run.startedAt).toLocaleString(dateLocale, {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </p>
+              </div>
+
+              <Button
+                size="sm"
+                variant="outline"
+                render={
+                  <Link
+                    href={`/therapist/patients/${patientId}/sessions/${sessionId}/activities/${run.id}`}
+                  >
+                    {dict.rocksFlow.viewActivity}
+                  </Link>
+                }
+              />
+            </div>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

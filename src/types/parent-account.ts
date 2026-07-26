@@ -6,12 +6,6 @@ export type ParentRelationship =
   | "guardian"
   | "other";
 
-export type ParentInvitationStatus =
-  | "not_requested"
-  | "pending"
-  | "accepted"
-  | "failed";
-
 export type ParentAccount = {
   id: string;
   therapistId: string;
@@ -22,7 +16,6 @@ export type ParentAccount = {
   relationship: ParentRelationship;
   canAccessApp: boolean;
   patientIds: string[];
-  invitationStatus: ParentInvitationStatus;
   createdAt: string;
   updatedAt: string;
 };
