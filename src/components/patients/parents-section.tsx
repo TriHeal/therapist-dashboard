@@ -107,7 +107,7 @@ export default function ParentsSection({
                     </p>
 
                     <p className="text-muted-foreground">
-                      {parent.firebaseUid
+                      {parent.invitationStatus === "accepted"
                         ? dict.parentSection.accountLinked
                         : dict.parentSection.invited}
                     </p>

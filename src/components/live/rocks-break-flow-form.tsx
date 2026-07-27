@@ -3,16 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Plus, Trash2 } from "lucide-react";
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { stopLiveSessionActivity } from "@/lib/actions/live-session-activities.actions";
 import { saveRocksBreakFlow } from "@/lib/actions/rocks-break-flow.actions";
-import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { RocksBreakFlowDetails } from "@/lib/data";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 export function RocksBreakFlowForm({
   sessionId,
@@ -27,6 +27,10 @@ export function RocksBreakFlowForm({
 }) {
   const router = useRouter();
 
+  const activitiesHref =
+    `/therapist/patients/${patientId}/sessions/${sessionId}` +
+    "/activities/event-processing";
+
   const [whatHappened, setWhatHappened] = useState(
     initialDetails?.eventTitle ?? "",
   );
@@ -38,9 +42,9 @@ export function RocksBreakFlowForm({
   const [interpretations, setInterpretations] = useState(
     initialDetails?.thoughts?.length ? initialDetails.thoughts : [""],
   );
-  const [action, setAction] = useState<"save" | "stop" | null>(null);
+
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [saved, setSaved] = useState(false);
 
   function updateList(
     values: string[],
@@ -59,12 +63,13 @@ export function RocksBreakFlowForm({
     index: number,
   ) {
     if (values.length === 1) return;
+
     setValues(values.filter((_, itemIndex) => itemIndex !== index));
   }
 
-  async function save(): Promise<boolean> {
+  async function handleApprove() {
+    setSubmitting(true);
     setError(null);
-    setSaved(false);
 
     const result = await saveRocksBreakFlow(
       sessionId,
@@ -75,176 +80,153 @@ export function RocksBreakFlowForm({
 
     if ("error" in result) {
       setError(result.error);
-      return false;
-    }
-
-    setSaved(true);
-    return true;
-  }
-
-  async function handleSave() {
-    setAction("save");
-    await save();
-    setAction(null);
-  }
-
-  async function handleStop() {
-    setAction("stop");
-
-    const savedSuccessfully = await save();
-
-    if (!savedSuccessfully) {
-      setAction(null);
+      setSubmitting(false);
       return;
     }
 
-    const result = await stopLiveSessionActivity(sessionId, patientId);
+    setSubmitting(false);
+    router.replace(activitiesHref);
+  }
 
-    if ("error" in result) {
-      setError(result.error);
-      setAction(null);
-      return;
-    }
-
-    router.push(`/therapist/patients/${patientId}/live`);
-    router.refresh();
+  function handleCancel() {
+    router.push(activitiesHref);
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{dict.rocksFlow.title}</CardTitle>
-      </CardHeader>
+    <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
+      <Card className="shadow-sm">
+        <CardHeader className="border-b">
+          <CardTitle>{dict.rocksFlow.title}</CardTitle>
+        </CardHeader>
 
-      <CardContent className="space-y-6">
-        {error ? (
-          <Alert variant="destructive">
-            <AlertTitle>{dict.rocksFlow.errorTitle}</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        ) : null}
+        <CardContent className="space-y-7 pt-6">
+          {error ? (
+            <Alert variant="destructive">
+              <AlertTitle>{dict.rocksFlow.errorTitle}</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          ) : null}
 
-        {saved ? (
-          <Alert>
-            <AlertTitle>{dict.rocksFlow.saved}</AlertTitle>
-          </Alert>
-        ) : null}
+          <div className="space-y-2">
+            <Label htmlFor="what-happened">
+              {dict.rocksFlow.whatHappened}
+            </Label>
 
-        <div className="space-y-2">
-          <Label htmlFor="what-happened">{dict.rocksFlow.whatHappened}</Label>
-          <Textarea
-            id="what-happened"
-            value={whatHappened}
-            onChange={(event) => setWhatHappened(event.target.value)}
-            className="min-h-28 resize-y"
-          />
-        </div>
+            <Textarea
+              id="what-happened"
+              value={whatHappened}
+              onChange={(event) => setWhatHappened(event.target.value)}
+              className="min-h-32 resize-y"
+            />
+          </div>
 
-        <div className="space-y-3">
-          <Label>{dict.rocksFlow.facts}</Label>
+          <div className="space-y-3">
+            <Label>{dict.rocksFlow.facts}</Label>
 
-          {facts.map((fact, index) => (
-            <div key={index} className="flex gap-2">
-              <Input
-                value={fact}
-                onChange={(event) =>
-                  updateList(facts, setFacts, index, event.target.value)
-                }
-              />
+            {facts.map((fact, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <Input
+                  value={fact}
+                  onChange={(event) =>
+                    updateList(facts, setFacts, index, event.target.value)
+                  }
+                />
 
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                disabled={facts.length === 1}
-                onClick={() => removeListItem(facts, setFacts, index)}
-                aria-label={dict.rocksFlow.removeFact}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  disabled={facts.length === 1 || submitting}
+                  onClick={() => removeListItem(facts, setFacts, index)}
+                  aria-label={dict.rocksFlow.removeFact}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setFacts((current) => [...current, ""])}
-          >
-            <Plus className="h-4 w-4" />
-            {dict.rocksFlow.addFact}
-          </Button>
-        </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={submitting}
+              onClick={() => setFacts((current) => [...current, ""])}
+            >
+              <Plus className="h-4 w-4" />
+              {dict.rocksFlow.addFact}
+            </Button>
+          </div>
 
-        <div className="space-y-3">
-          <Label>{dict.rocksFlow.interpretations}</Label>
+          <div className="space-y-3">
+            <Label>{dict.rocksFlow.interpretations}</Label>
 
-          {interpretations.map((interpretation, index) => (
-            <div key={index} className="flex gap-2">
-              <Input
-                value={interpretation}
-                onChange={(event) =>
-                  updateList(
-                    interpretations,
-                    setInterpretations,
-                    index,
-                    event.target.value,
-                  )
-                }
-              />
+            {interpretations.map((interpretation, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <Input
+                  value={interpretation}
+                  onChange={(event) =>
+                    updateList(
+                      interpretations,
+                      setInterpretations,
+                      index,
+                      event.target.value,
+                    )
+                  }
+                />
 
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                disabled={interpretations.length === 1}
-                onClick={() =>
-                  removeListItem(interpretations, setInterpretations, index)
-                }
-                aria-label={dict.rocksFlow.removeInterpretation}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  disabled={interpretations.length === 1 || submitting}
+                  onClick={() =>
+                    removeListItem(interpretations, setInterpretations, index)
+                  }
+                  aria-label={dict.rocksFlow.removeInterpretation}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setInterpretations((current) => [...current, ""])}
-          >
-            <Plus className="h-4 w-4" />
-            {dict.rocksFlow.addInterpretation}
-          </Button>
-        </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={submitting}
+              onClick={() =>
+                setInterpretations((current) => [...current, ""])
+              }
+            >
+              <Plus className="h-4 w-4" />
+              {dict.rocksFlow.addInterpretation}
+            </Button>
+          </div>
 
-        <div className="flex flex-wrap justify-end gap-3 border-t pt-5">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={action !== null}
-            onClick={handleSave}
-          >
-            {action === "save" ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : null}
-            {dict.rocksFlow.save}
-          </Button>
+          <div className="flex flex-wrap justify-end gap-3 border-t pt-5">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={submitting}
+              onClick={handleCancel}
+            >
+              {dict.common.cancel}
+            </Button>
 
-          <Button
-            type="button"
-            variant="destructive"
-            disabled={action !== null}
-            onClick={handleStop}
-          >
-            {action === "stop" ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : null}
-            {dict.rocksFlow.stopActivity}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+            <Button
+              type="button"
+              disabled={submitting}
+              onClick={handleApprove}
+            >
+              {submitting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : null}
+
+              {dict.rocksFlow.save}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
