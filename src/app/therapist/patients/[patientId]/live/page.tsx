@@ -1,7 +1,11 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
+
 import { AppHeader } from "@/components/layout/app-header";
+import { LiveSessionControls } from "@/components/live/live-session-controls";
 import { EndSessionButton } from "@/components/sessions/end-session-button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,12 +14,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  getLiveSessionActivityRuns,
   getPatient,
   getPatientSessions,
-  getLiveSessionActivityRuns,
 } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-locale";
-import { LiveSessionControls } from "@/components/live/live-session-controls";
 
 export default async function LiveSessionDetailPage({
   params,
@@ -30,7 +33,9 @@ export default async function LiveSessionDetailPage({
     getPatientSessions(patientId),
   ]);
 
-  if (!patient) notFound();
+  if (!patient) {
+    notFound();
+  }
 
   const activeSession = sessions.find(
     (session) => session.status === "in_progress",
@@ -40,6 +45,12 @@ export default async function LiveSessionDetailPage({
     ? await getLiveSessionActivityRuns(activeSession.id)
     : [];
 
+    const hasActiveActivity =
+    activeSession?.activities?.some(
+      (activity) => activity.status === "active",
+    ) ||
+    activityRuns.some((run) => run.status === "active");
+    
   const activeSessionIndex = activeSession
     ? sessions.findIndex((session) => session.id === activeSession.id)
     : -1;
@@ -48,6 +59,8 @@ export default async function LiveSessionDetailPage({
     activeSessionIndex >= 0 ? sessions.length - activeSessionIndex : null;
 
   const dateLocale = locale === "he" ? "he-IL" : "en-US";
+
+  const sessionsHref = `/therapist/patients/${patientId}/sessions`;
 
   return (
     <>
@@ -62,6 +75,7 @@ export default async function LiveSessionDetailPage({
             <Card>
               <CardHeader>
                 <CardTitle>{patient.displayName}</CardTitle>
+
                 <CardDescription>
                   {dict.liveDetail.sessionLabel} {patient.displayName}
                 </CardDescription>
@@ -73,6 +87,7 @@ export default async function LiveSessionDetailPage({
                     <p className="text-sm font-medium text-muted-foreground">
                       {dict.liveDetail.sessionLabel}
                     </p>
+
                     <p className="text-base font-semibold">
                       #{activeSessionNumber}
                     </p>
@@ -92,6 +107,7 @@ export default async function LiveSessionDetailPage({
                     <p className="text-sm font-medium text-muted-foreground">
                       {dict.liveDetail.sessionStatus}
                     </p>
+
                     <p className="text-base font-semibold">
                       {dict.sessionStatus.in_progress}
                     </p>
@@ -109,15 +125,31 @@ export default async function LiveSessionDetailPage({
               locale={locale}
             />
 
-            <EndSessionButton
-              sessionId={activeSession.id}
-              patientId={patientId}
-              dict={dict}
-            />
+            <div className="space-y-4">
+              <EndSessionButton
+                sessionId={activeSession.id}
+                patientId={patientId}
+                dict={dict}
+                hasActiveActivity={hasActiveActivity}
+              />
+
+              <div className="flex justify-end">
+                <Button
+                  variant="outline"
+                  nativeButton={false}
+                  render={
+                    <Link href={sessionsHref}>
+                      {dict.rocksFlow.backToSessions}
+                    </Link>
+                  }
+                />
+              </div>
+            </div>
           </>
         ) : (
           <Alert>
             <AlertTitle>{dict.liveDetail.noActiveSessionTitle}</AlertTitle>
+
             <AlertDescription>
               {dict.liveDetail.noActiveSessionDescription}
             </AlertDescription>

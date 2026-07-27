@@ -78,8 +78,16 @@ export async function endTherapySession(
     revalidatePath(`/therapist/patients/${patientId}/live`);
     return { success: true };
   } catch (err: unknown) {
+    const status =
+      typeof err === "object" && err !== null && "status" in err
+        ? (err as { status?: number }).status
+        : undefined;
+
+    if (status === 409) {
+      return { error: "active_activity" };
+    }
+
     console.error("Failed to end therapy session:", err);
-    const msg = err instanceof Error ? err.message : "Failed to end therapy session";
-    return { error: msg };
+    return { error: "generic" };
   }
 }
